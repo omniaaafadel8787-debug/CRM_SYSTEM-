@@ -1,0 +1,1820 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" id="htmlRoot"><head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CRM System — Real Estate &amp; Clients Management</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&amp;family=Inter:wght@400;600;700;800;900&amp;display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Cairo', 'Inter', sans-serif; background-color: #f3f6f9; color: #0f172a; }
+    html[lang="en"] body { font-family: 'Inter', 'Cairo', sans-serif; }
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    .tab-pill-active { background-color: #1e293b; color: #ffffff; box-shadow: 0 4px 10px rgba(15, 23, 42, 0.18); }
+    .tab-pill-inactive { background-color: #ffffff; color: #334155; border: 1px solid #e2e8f0; }
+
+    /* Print Brochure Styles */
+    @media print {
+      body * { visibility: hidden !important; }
+      #brochureModal, #brochureModal * { visibility: visible !important; }
+      #brochureModal {
+        position: fixed !important;
+        inset: 0 !important;
+        background: #ffffff !important;
+        padding: 0 !important;
+        z-index: 9999 !important;
+      }
+      #brochureActions { display: none !important; }
+      #brochureCard {
+        box-shadow: none !important;
+        border: none !important;
+        max-width: 100% !important;
+        width: 100% !important;
+      }
+    }
+  </style>
+<style>*, ::before, ::after{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }::backdrop{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }/* ! tailwindcss v3.4.17 | MIT License | https://tailwindcss.com */*,::after,::before{box-sizing:border-box;border-width:0;border-style:solid;border-color:#e5e7eb}::after,::before{--tw-content:''}:host,html{line-height:1.5;-webkit-text-size-adjust:100%;-moz-tab-size:4;tab-size:4;font-family:ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";font-feature-settings:normal;font-variation-settings:normal;-webkit-tap-highlight-color:transparent}body{margin:0;line-height:inherit}hr{height:0;color:inherit;border-top-width:1px}abbr:where([title]){-webkit-text-decoration:underline dotted;text-decoration:underline dotted}h1,h2,h3,h4,h5,h6{font-size:inherit;font-weight:inherit}a{color:inherit;text-decoration:inherit}b,strong{font-weight:bolder}code,kbd,pre,samp{font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;font-feature-settings:normal;font-variation-settings:normal;font-size:1em}small{font-size:80%}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}sub{bottom:-.25em}sup{top:-.5em}table{text-indent:0;border-color:inherit;border-collapse:collapse}button,input,optgroup,select,textarea{font-family:inherit;font-feature-settings:inherit;font-variation-settings:inherit;font-size:100%;font-weight:inherit;line-height:inherit;letter-spacing:inherit;color:inherit;margin:0;padding:0}button,select{text-transform:none}button,input:where([type=button]),input:where([type=reset]),input:where([type=submit]){-webkit-appearance:button;background-color:transparent;background-image:none}:-moz-focusring{outline:auto}:-moz-ui-invalid{box-shadow:none}progress{vertical-align:baseline}::-webkit-inner-spin-button,::-webkit-outer-spin-button{height:auto}[type=search]{-webkit-appearance:textfield;outline-offset:-2px}::-webkit-search-decoration{-webkit-appearance:none}::-webkit-file-upload-button{-webkit-appearance:button;font:inherit}summary{display:list-item}blockquote,dd,dl,figure,h1,h2,h3,h4,h5,h6,hr,p,pre{margin:0}fieldset{margin:0;padding:0}legend{padding:0}menu,ol,ul{list-style:none;margin:0;padding:0}dialog{padding:0}textarea{resize:vertical}input::placeholder,textarea::placeholder{opacity:1;color:#9ca3af}[role=button],button{cursor:pointer}:disabled{cursor:default}audio,canvas,embed,iframe,img,object,svg,video{display:block;vertical-align:middle}img,video{max-width:100%;height:auto}[hidden]:where(:not([hidden=until-found])){display:none}.fixed{position:fixed}.inset-0{inset:0px}.z-50{z-index:50}.mx-auto{margin-left:auto;margin-right:auto}.my-0\.5{margin-top:0.125rem;margin-bottom:0.125rem}.mb-1{margin-bottom:0.25rem}.mb-2{margin-bottom:0.5rem}.mb-3{margin-bottom:0.75rem}.mt-1{margin-top:0.25rem}.mt-4{margin-top:1rem}.mt-0\.5{margin-top:0.125rem}.mt-1\.5{margin-top:0.375rem}.block{display:block}.flex{display:flex}.grid{display:grid}.hidden{display:none}.h-12{height:3rem}.h-4{height:1rem}.h-6{height:1.5rem}.h-64{height:16rem}.max-h-\[90vh\]{max-height:90vh}.min-h-screen{min-height:100vh}.w-12{width:3rem}.w-32{width:8rem}.w-4{width:1rem}.w-6{width:1.5rem}.w-full{width:100%}.max-w-2xl{max-width:42rem}.max-w-6xl{max-width:72rem}.max-w-md{max-width:28rem}.max-w-lg{max-width:32rem}.max-w-xl{max-width:36rem}.flex-1{flex:1 1 0%}.shrink-0{flex-shrink:0}.border-collapse{border-collapse:collapse}.cursor-pointer{cursor:pointer}.grid-cols-1{grid-template-columns:repeat(1, minmax(0, 1fr))}.grid-cols-2{grid-template-columns:repeat(2, minmax(0, 1fr))}.flex-wrap{flex-wrap:wrap}.items-center{align-items:center}.justify-end{justify-content:flex-end}.justify-center{justify-content:center}.justify-between{justify-content:space-between}.gap-1\.5{gap:0.375rem}.gap-2{gap:0.5rem}.gap-2\.5{gap:0.625rem}.gap-3{gap:0.75rem}.gap-4{gap:1rem}.space-y-2 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(0.5rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(0.5rem * var(--tw-space-y-reverse))}.space-y-3 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(0.75rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(0.75rem * var(--tw-space-y-reverse))}.space-y-4 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(1rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(1rem * var(--tw-space-y-reverse))}.space-y-1 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(0.25rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(0.25rem * var(--tw-space-y-reverse))}.divide-y > :not([hidden]) ~ :not([hidden]){--tw-divide-y-reverse:0;border-top-width:calc(1px * calc(1 - var(--tw-divide-y-reverse)));border-bottom-width:calc(1px * var(--tw-divide-y-reverse))}.divide-slate-200 > :not([hidden]) ~ :not([hidden]){--tw-divide-opacity:1;border-color:rgb(226 232 240 / var(--tw-divide-opacity, 1))}.overflow-x-auto{overflow-x:auto}.overflow-y-auto{overflow-y:auto}.break-all{word-break:break-all}.rounded-2xl{border-radius:1rem}.rounded-3xl{border-radius:1.5rem}.rounded-full{border-radius:9999px}.rounded-xl{border-radius:0.75rem}.border{border-width:1px}.border-2{border-width:2px}.border-b{border-bottom-width:1px}.border-t{border-top-width:1px}.border-dashed{border-style:dashed}.border-amber-200{--tw-border-opacity:1;border-color:rgb(253 230 138 / var(--tw-border-opacity, 1))}.border-amber-300{--tw-border-opacity:1;border-color:rgb(252 211 77 / var(--tw-border-opacity, 1))}.border-blue-500\/30{border-color:rgb(59 130 246 / 0.3)}.border-emerald-200{--tw-border-opacity:1;border-color:rgb(167 243 208 / var(--tw-border-opacity, 1))}.border-emerald-500\/30{border-color:rgb(16 185 129 / 0.3)}.border-emerald-500\/40{border-color:rgb(16 185 129 / 0.4)}.border-indigo-200{--tw-border-opacity:1;border-color:rgb(199 210 254 / var(--tw-border-opacity, 1))}.border-purple-500\/30{border-color:rgb(168 85 247 / 0.3)}.border-rose-500\/30{border-color:rgb(244 63 94 / 0.3)}.border-slate-200{--tw-border-opacity:1;border-color:rgb(226 232 240 / var(--tw-border-opacity, 1))}.border-slate-200\/80{border-color:rgb(226 232 240 / 0.8)}.border-slate-300{--tw-border-opacity:1;border-color:rgb(203 213 225 / var(--tw-border-opacity, 1))}.border-slate-600{--tw-border-opacity:1;border-color:rgb(71 85 105 / var(--tw-border-opacity, 1))}.border-slate-700{--tw-border-opacity:1;border-color:rgb(51 65 85 / var(--tw-border-opacity, 1))}.border-slate-700\/80{border-color:rgb(51 65 85 / 0.8)}.border-slate-800{--tw-border-opacity:1;border-color:rgb(30 41 59 / var(--tw-border-opacity, 1))}.bg-\[\#0f172a\]{--tw-bg-opacity:1;background-color:rgb(15 23 42 / var(--tw-bg-opacity, 1))}.bg-amber-100{--tw-bg-opacity:1;background-color:rgb(254 243 199 / var(--tw-bg-opacity, 1))}.bg-amber-400{--tw-bg-opacity:1;background-color:rgb(251 191 36 / var(--tw-bg-opacity, 1))}.bg-amber-50{--tw-bg-opacity:1;background-color:rgb(255 251 235 / var(--tw-bg-opacity, 1))}.bg-amber-500{--tw-bg-opacity:1;background-color:rgb(245 158 11 / var(--tw-bg-opacity, 1))}.bg-amber-600{--tw-bg-opacity:1;background-color:rgb(217 119 6 / var(--tw-bg-opacity, 1))}.bg-blue-500\/20{background-color:rgb(59 130 246 / 0.2)}.bg-emerald-50{--tw-bg-opacity:1;background-color:rgb(236 253 245 / var(--tw-bg-opacity, 1))}.bg-emerald-500\/20{background-color:rgb(16 185 129 / 0.2)}.bg-emerald-600{--tw-bg-opacity:1;background-color:rgb(5 150 105 / var(--tw-bg-opacity, 1))}.bg-indigo-50{--tw-bg-opacity:1;background-color:rgb(238 242 255 / var(--tw-bg-opacity, 1))}.bg-purple-100{--tw-bg-opacity:1;background-color:rgb(243 232 255 / var(--tw-bg-opacity, 1))}.bg-purple-50{--tw-bg-opacity:1;background-color:rgb(250 245 255 / var(--tw-bg-opacity, 1))}.bg-purple-500\/20{background-color:rgb(168 85 247 / 0.2)}.bg-purple-700{--tw-bg-opacity:1;background-color:rgb(126 34 206 / var(--tw-bg-opacity, 1))}.bg-rose-500\/20{background-color:rgb(244 63 94 / 0.2)}.bg-sky-50{--tw-bg-opacity:1;background-color:rgb(240 249 255 / var(--tw-bg-opacity, 1))}.bg-slate-100{--tw-bg-opacity:1;background-color:rgb(241 245 249 / var(--tw-bg-opacity, 1))}.bg-slate-50{--tw-bg-opacity:1;background-color:rgb(248 250 252 / var(--tw-bg-opacity, 1))}.bg-slate-50\/70{background-color:rgb(248 250 252 / 0.7)}.bg-slate-800{--tw-bg-opacity:1;background-color:rgb(30 41 59 / var(--tw-bg-opacity, 1))}.bg-slate-800\/80{background-color:rgb(30 41 59 / 0.8)}.bg-slate-900{--tw-bg-opacity:1;background-color:rgb(15 23 42 / var(--tw-bg-opacity, 1))}.bg-slate-900\/60{background-color:rgb(15 23 42 / 0.6)}.bg-slate-900\/90{background-color:rgb(15 23 42 / 0.9)}.bg-white{--tw-bg-opacity:1;background-color:rgb(255 255 255 / var(--tw-bg-opacity, 1))}.bg-white\/20{background-color:rgb(255 255 255 / 0.2)}.bg-slate-900\/70{background-color:rgb(15 23 42 / 0.7)}.p-2\.5{padding:0.625rem}.p-3\.5{padding:0.875rem}.p-4{padding:1rem}.p-5{padding:1.25rem}.p-3{padding:0.75rem}.p-6{padding:1.5rem}.px-2{padding-left:0.5rem;padding-right:0.5rem}.px-2\.5{padding-left:0.625rem;padding-right:0.625rem}.px-3{padding-left:0.75rem;padding-right:0.75rem}.px-3\.5{padding-left:0.875rem;padding-right:0.875rem}.px-4{padding-left:1rem;padding-right:1rem}.py-0\.5{padding-top:0.125rem;padding-bottom:0.125rem}.py-1{padding-top:0.25rem;padding-bottom:0.25rem}.py-1\.5{padding-top:0.375rem;padding-bottom:0.375rem}.py-12{padding-top:3rem;padding-bottom:3rem}.py-2{padding-top:0.5rem;padding-bottom:0.5rem}.py-2\.5{padding-top:0.625rem;padding-bottom:0.625rem}.py-3{padding-top:0.75rem;padding-bottom:0.75rem}.px-5{padding-left:1.25rem;padding-right:1.25rem}.pb-10{padding-bottom:2.5rem}.pb-3{padding-bottom:0.75rem}.pt-1{padding-top:0.25rem}.pt-3{padding-top:0.75rem}.pt-2{padding-top:0.5rem}.text-left{text-align:left}.text-center{text-align:center}.text-right{text-align:right}.text-2xl{font-size:1.5rem;line-height:2rem}.text-3xl{font-size:1.875rem;line-height:2.25rem}.text-\[11px\]{font-size:11px}.text-base{font-size:1rem;line-height:1.5rem}.text-lg{font-size:1.125rem;line-height:1.75rem}.text-sm{font-size:0.875rem;line-height:1.25rem}.text-xl{font-size:1.25rem;line-height:1.75rem}.text-xs{font-size:0.75rem;line-height:1rem}.font-black{font-weight:900}.font-bold{font-weight:700}.font-extrabold{font-weight:800}.leading-relaxed{line-height:1.625}.tracking-tight{letter-spacing:-0.025em}.text-amber-300{--tw-text-opacity:1;color:rgb(252 211 77 / var(--tw-text-opacity, 1))}.text-amber-400{--tw-text-opacity:1;color:rgb(251 191 36 / var(--tw-text-opacity, 1))}.text-amber-600{--tw-text-opacity:1;color:rgb(217 119 6 / var(--tw-text-opacity, 1))}.text-amber-800{--tw-text-opacity:1;color:rgb(146 64 14 / var(--tw-text-opacity, 1))}.text-amber-900{--tw-text-opacity:1;color:rgb(120 53 15 / var(--tw-text-opacity, 1))}.text-blue-300{--tw-text-opacity:1;color:rgb(147 197 253 / var(--tw-text-opacity, 1))}.text-emerald-300{--tw-text-opacity:1;color:rgb(110 231 183 / var(--tw-text-opacity, 1))}.text-emerald-400{--tw-text-opacity:1;color:rgb(52 211 153 / var(--tw-text-opacity, 1))}.text-emerald-600{--tw-text-opacity:1;color:rgb(5 150 105 / var(--tw-text-opacity, 1))}.text-emerald-800{--tw-text-opacity:1;color:rgb(6 95 70 / var(--tw-text-opacity, 1))}.text-emerald-900{--tw-text-opacity:1;color:rgb(6 78 59 / var(--tw-text-opacity, 1))}.text-indigo-800{--tw-text-opacity:1;color:rgb(55 48 163 / var(--tw-text-opacity, 1))}.text-indigo-900{--tw-text-opacity:1;color:rgb(49 46 129 / var(--tw-text-opacity, 1))}.text-purple-300{--tw-text-opacity:1;color:rgb(216 180 254 / var(--tw-text-opacity, 1))}.text-purple-600{--tw-text-opacity:1;color:rgb(147 51 234 / var(--tw-text-opacity, 1))}.text-purple-700{--tw-text-opacity:1;color:rgb(126 34 206 / var(--tw-text-opacity, 1))}.text-rose-300{--tw-text-opacity:1;color:rgb(253 164 175 / var(--tw-text-opacity, 1))}.text-sky-600{--tw-text-opacity:1;color:rgb(2 132 199 / var(--tw-text-opacity, 1))}.text-slate-200{--tw-text-opacity:1;color:rgb(226 232 240 / var(--tw-text-opacity, 1))}.text-slate-300{--tw-text-opacity:1;color:rgb(203 213 225 / var(--tw-text-opacity, 1))}.text-slate-400{--tw-text-opacity:1;color:rgb(148 163 184 / var(--tw-text-opacity, 1))}.text-slate-500{--tw-text-opacity:1;color:rgb(100 116 139 / var(--tw-text-opacity, 1))}.text-slate-700{--tw-text-opacity:1;color:rgb(51 65 85 / var(--tw-text-opacity, 1))}.text-slate-800{--tw-text-opacity:1;color:rgb(30 41 59 / var(--tw-text-opacity, 1))}.text-slate-900{--tw-text-opacity:1;color:rgb(15 23 42 / var(--tw-text-opacity, 1))}.text-slate-950{--tw-text-opacity:1;color:rgb(2 6 23 / var(--tw-text-opacity, 1))}.text-white{--tw-text-opacity:1;color:rgb(255 255 255 / var(--tw-text-opacity, 1))}.text-blue-700{--tw-text-opacity:1;color:rgb(29 78 216 / var(--tw-text-opacity, 1))}.text-slate-600{--tw-text-opacity:1;color:rgb(71 85 105 / var(--tw-text-opacity, 1))}.shadow{--tw-shadow:0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);--tw-shadow-colored:0 1px 3px 0 var(--tw-shadow-color), 0 1px 2px -1px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.shadow-2xl{--tw-shadow:0 25px 50px -12px rgb(0 0 0 / 0.25);--tw-shadow-colored:0 25px 50px -12px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.shadow-sm{--tw-shadow:0 1px 2px 0 rgb(0 0 0 / 0.05);--tw-shadow-colored:0 1px 2px 0 var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.shadow-xl{--tw-shadow:0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);--tw-shadow-colored:0 20px 25px -5px var(--tw-shadow-color), 0 8px 10px -6px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.transition{transition-property:color, background-color, border-color, fill, stroke, opacity, box-shadow, transform, filter, -webkit-text-decoration-color, -webkit-backdrop-filter;transition-property:color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter;transition-property:color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter, -webkit-text-decoration-color, -webkit-backdrop-filter;transition-timing-function:cubic-bezier(0.4, 0, 0.2, 1);transition-duration:150ms}.hover\:bg-amber-500:hover{--tw-bg-opacity:1;background-color:rgb(245 158 11 / var(--tw-bg-opacity, 1))}.hover\:bg-amber-600:hover{--tw-bg-opacity:1;background-color:rgb(217 119 6 / var(--tw-bg-opacity, 1))}.hover\:bg-amber-700:hover{--tw-bg-opacity:1;background-color:rgb(180 83 9 / var(--tw-bg-opacity, 1))}.hover\:bg-blue-500\/30:hover{background-color:rgb(59 130 246 / 0.3)}.hover\:bg-emerald-700:hover{--tw-bg-opacity:1;background-color:rgb(4 120 87 / var(--tw-bg-opacity, 1))}.hover\:bg-purple-500\/30:hover{background-color:rgb(168 85 247 / 0.3)}.hover\:bg-purple-800:hover{--tw-bg-opacity:1;background-color:rgb(107 33 168 / var(--tw-bg-opacity, 1))}.hover\:bg-rose-500\/30:hover{background-color:rgb(244 63 94 / 0.3)}.hover\:bg-slate-700:hover{--tw-bg-opacity:1;background-color:rgb(51 65 85 / var(--tw-bg-opacity, 1))}.hover\:bg-slate-800:hover{--tw-bg-opacity:1;background-color:rgb(30 41 59 / var(--tw-bg-opacity, 1))}.hover\:text-slate-700:hover{--tw-text-opacity:1;color:rgb(51 65 85 / var(--tw-text-opacity, 1))}.hover\:shadow-md:hover{--tw-shadow:0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);--tw-shadow-colored:0 4px 6px -1px var(--tw-shadow-color), 0 2px 4px -2px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.focus\:border-emerald-400:focus{--tw-border-opacity:1;border-color:rgb(52 211 153 / var(--tw-border-opacity, 1))}.focus\:border-slate-800:focus{--tw-border-opacity:1;border-color:rgb(30 41 59 / var(--tw-border-opacity, 1))}.focus\:outline-none:focus{outline:2px solid transparent;outline-offset:2px}@media (min-width: 640px){.sm\:w-auto{width:auto}.sm\:flex-initial{flex:0 1 auto}.sm\:flex-none{flex:none}.sm\:grid-cols-2{grid-template-columns:repeat(2, minmax(0, 1fr))}}@media (min-width: 768px){.md\:col-span-2{grid-column:span 2 / span 2}.md\:w-56{width:14rem}.md\:w-auto{width:auto}.md\:grid-cols-2{grid-template-columns:repeat(2, minmax(0, 1fr))}.md\:grid-cols-3{grid-template-columns:repeat(3, minmax(0, 1fr))}.md\:justify-end{justify-content:flex-end}.md\:p-6{padding:1.5rem}.md\:pt-5{padding-top:1.25rem}.md\:text-2xl{font-size:1.5rem;line-height:2rem}.md\:text-base{font-size:1rem;line-height:1.5rem}.md\:text-lg{font-size:1.125rem;line-height:1.75rem}.md\:text-sm{font-size:0.875rem;line-height:1.25rem}}@media (min-width: 1024px){.lg\:grid-cols-2{grid-template-columns:repeat(2, minmax(0, 1fr))}.lg\:grid-cols-4{grid-template-columns:repeat(4, minmax(0, 1fr))}}</style></head>
+<body class="min-h-screen pb-10">
+
+  <div class="max-w-6xl mx-auto px-3 pt-3 md:pt-5 space-y-4">
+
+    <!-- HERO HEADER CARD -->
+    <header class="bg-[#0f172a] text-white rounded-3xl p-4 md:p-6 shadow-xl border border-slate-800 space-y-4">
+      <div class="flex flex-wrap items-center justify-between gap-3">
+        <!-- Brand & Icon -->
+        <div class="flex items-center gap-3">
+          <div class="w-12 h-12 rounded-2xl bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center text-emerald-400 shrink-0">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+            </svg>
+          </div>
+          <div>
+            <div class="flex flex-wrap items-center gap-2">
+              <h1 class="text-xl md:text-2xl font-black tracking-tight text-white">CRM System</h1>
+              <span data-i18n="badgeTitle" class="bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 text-[11px] font-bold px-2.5 py-0.5 rounded-full">نظام إدارة العقارات والعملاء</span>
+            </div>
+            <p data-i18n="headerSub" class="text-xs text-slate-400 mt-1">إدارة شاملة للمعروض والمطلوب، المواعيد، المطابقة الذكية، العمولات، والتسويق</p>
+          </div>
+        </div>
+
+        <!-- Right Controls: Language Switcher + WhatsApp Input Box -->
+        <div class="flex flex-wrap items-center gap-2 w-full md:w-auto justify-between md:justify-end">
+          <button type="button" onclick="toggleLanguage()" id="langToggleBtn" class="bg-slate-800 hover:bg-slate-700 border border-slate-600 text-amber-300 font-extrabold text-xs px-3.5 py-2 rounded-2xl transition flex items-center gap-1.5 shadow-sm">
+            <span>🌐</span>
+            <span id="langToggleLabel">English</span>
+          </button>
+
+          <div class="flex items-center justify-between gap-2 bg-slate-900/90 border border-slate-700/80 rounded-2xl px-3.5 py-2 flex-1 sm:flex-initial">
+            <div class="flex items-center gap-1.5 text-emerald-400 text-xs font-bold">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+              </svg>
+              <span data-i18n="waAdsLabel">واتساب الإعلانات:</span>
+            </div>
+            <input id="globalWhatsapp" type="text" value="01023088574" onchange="saveWhatsapp(this.value)" class="bg-slate-800/80 text-emerald-300 font-extrabold text-xs px-3 py-1 rounded-xl border border-slate-700 focus:outline-none focus:border-emerald-400 w-32 text-center" dir="ltr">
+          </div>
+        </div>
+      </div>
+
+      <!-- Primary Action Buttons Row -->
+      <div class="flex flex-wrap items-center gap-2.5 pt-1">
+        <button type="button" onclick="downloadStandaloneHtml()" class="flex-1 sm:flex-none bg-amber-400 hover:bg-amber-500 text-slate-950 font-extrabold text-xs px-4 py-2.5 rounded-xl shadow transition flex items-center justify-center gap-1.5 cursor-pointer">
+          <span data-i18n="btnDownloadApp">💻 تحميل البرنامج على جهازك</span>
+        </button>
+
+        <label class="flex-1 sm:flex-none cursor-pointer bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-xs px-4 py-2.5 rounded-xl shadow transition flex items-center justify-center gap-1.5">
+          <span data-i18n="btnImportExcel">📥 استيراد Excel</span>
+          <input type="file" id="importFile" accept=".xlsx,.xls,.csv" class="hidden" onchange="handleImport(event)">
+        </label>
+
+        <button type="button" onclick="exportToExcel()" class="bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 font-bold text-xs px-3.5 py-2.5 rounded-xl transition flex items-center gap-1.5 cursor-pointer">
+          <span data-i18n="btnExportExcel">📤 تصدير Excel</span>
+        </button>
+
+        <button type="button" onclick="downloadBackup()" id="btnBackup" class="bg-blue-500/20 hover:bg-blue-500/30 border border-blue-500/30 text-blue-300 p-2.5 rounded-xl transition cursor-pointer" title="حفظ نسخة احتياطية">
+          💾
+        </button>
+
+        <label id="btnRestore" class="cursor-pointer bg-purple-500/20 hover:bg-purple-500/30 border border-purple-500/30 text-purple-300 p-2.5 rounded-xl transition" title="استرجاع نسخة احتياطية">
+          ☁️
+          <input type="file" accept=".json" class="hidden" onchange="restoreBackup(event)">
+        </label>
+
+        <button type="button" onclick="clearAllData()" id="btnClear" class="bg-rose-500/20 hover:bg-rose-500/30 border border-rose-500/30 text-rose-300 p-2.5 rounded-xl transition cursor-pointer" title="مسح جميع البيانات">
+          🗑️
+        </button>
+      </div>
+    </header>
+
+    <!-- Due Reminders Alert Banner -->
+    <div id="reminderBanner" class="hidden bg-amber-50 border border-amber-300 rounded-2xl px-4 py-3 flex flex-wrap items-center justify-between gap-2 text-xs">
+      <div class="flex items-center gap-2 text-amber-900 font-bold">
+        <span data-i18n="reminderPrefix">🔔 تنبيه المواعيد:</span>
+        <span id="reminderBannerText"></span>
+      </div>
+      <button type="button" onclick="switchTab('tasks')" data-i18n="btnViewReminders" class="bg-amber-600 text-white px-3 py-1.5 rounded-xl font-bold hover:bg-amber-700">عرض المواعيد</button>
+    </div>
+
+    <!-- NAVIGATION TABS -->
+    <nav class="flex items-center gap-2 overflow-x-auto no-scrollbar py-1">
+      <button type="button" onclick="switchTab('sale')" id="tab-sale" class="tab-pill-active shrink-0 px-4 py-2.5 rounded-2xl text-xs font-extrabold transition flex items-center gap-2">
+        <span data-i18n="tabSale">🏢 المتاح للبيع</span>
+        <span id="badge-sale" class="bg-white/20 px-2 py-0.5 rounded-full text-[11px]">0</span>
+      </button>
+      <button type="button" onclick="switchTab('rent')" id="tab-rent" class="tab-pill-inactive shrink-0 px-4 py-2.5 rounded-2xl text-xs font-extrabold transition flex items-center gap-2">
+        <span data-i18n="tabRent">🔑 المتاح للإيجار</span>
+        <span id="badge-rent" class="bg-slate-100 text-slate-700 px-2 py-0.5 rounded-full text-[11px]">0</span>
+      </button>
+      <button type="button" onclick="switchTab('req')" id="tab-req" class="tab-pill-inactive shrink-0 px-4 py-2.5 rounded-2xl text-xs font-extrabold transition flex items-center gap-2">
+        <span data-i18n="tabReq">👥 المطلوب (طلبات العملاء)</span>
+        <span id="badge-req" class="bg-slate-100 text-slate-700 px-2 py-0.5 rounded-full text-[11px]">0</span>
+      </button>
+      <button type="button" onclick="switchTab('match')" id="tab-match" class="tab-pill-inactive shrink-0 px-4 py-2.5 rounded-2xl text-xs font-extrabold transition flex items-center gap-2">
+        <span data-i18n="tabMatch">⚡ المطابقة الذكية</span>
+        <span id="badge-match" class="bg-purple-100 text-purple-700 px-2 py-0.5 rounded-full text-[11px]">0</span>
+      </button>
+      <button type="button" onclick="switchTab('tasks')" id="tab-tasks" class="tab-pill-inactive shrink-0 px-4 py-2.5 rounded-2xl text-xs font-extrabold transition flex items-center gap-2">
+        <span data-i18n="tabTasks">📅 المواعيد والتذكيرات</span>
+        <span id="badge-tasks" class="bg-amber-100 text-amber-800 px-2 py-0.5 rounded-full text-[11px]">0</span>
+      </button>
+      <button type="button" onclick="switchTab('reports')" id="tab-reports" class="tab-pill-inactive shrink-0 px-4 py-2.5 rounded-2xl text-xs font-extrabold transition flex items-center gap-2">
+        <span data-i18n="tabReports">📊 التقارير والعمولات</span>
+      </button>
+      <button type="button" onclick="switchTab('ads')" id="tab-ads" class="tab-pill-inactive shrink-0 px-4 py-2.5 rounded-2xl text-xs font-extrabold transition flex items-center gap-2">
+        <span data-i18n="tabAds">📣 مولّد الإعلانات والرسائل</span>
+      </button>
+    </nav>
+
+    <!-- KPI CARDS -->
+    <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+      <!-- Card 1: Sale -->
+      <div onclick="switchTab('sale')" class="cursor-pointer bg-white rounded-2xl p-4 border border-slate-200/80 shadow-xs hover:shadow-md transition flex items-center justify-between">
+        <div class="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+          </svg>
+        </div>
+        <div class="kpi-text text-left">
+          <p data-i18n="kpiSaleTitle" class="text-xs font-bold text-slate-500">المتاح للبيع</p>
+          <p id="kpiSale" class="text-2xl font-black text-slate-900 my-0.5">0</p>
+          <p id="kpiSaleAvg" class="text-[11px] font-bold text-emerald-600">متوسط: 0 ج.م</p>
+        </div>
+      </div>
+
+      <!-- Card 2: Rent -->
+      <div onclick="switchTab('rent')" class="cursor-pointer bg-white rounded-2xl p-4 border border-slate-200/80 shadow-xs hover:shadow-md transition flex items-center justify-between">
+        <div class="w-12 h-12 rounded-2xl bg-sky-50 text-sky-600 flex items-center justify-center shrink-0">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"></path>
+          </svg>
+        </div>
+        <div class="kpi-text text-left">
+          <p data-i18n="kpiRentTitle" class="text-xs font-bold text-slate-500">المتاح للإيجار</p>
+          <p id="kpiRent" class="text-2xl font-black text-slate-900 my-0.5">0</p>
+          <p id="kpiRentAvg" class="text-[11px] font-bold text-sky-600">متوسط: 0 ج.م</p>
+        </div>
+      </div>
+
+      <!-- Card 3: Requests -->
+      <div onclick="switchTab('req')" class="cursor-pointer bg-white rounded-2xl p-4 border border-slate-200/80 shadow-xs hover:shadow-md transition flex items-center justify-between">
+        <div class="w-12 h-12 rounded-2xl bg-amber-50 text-amber-600 flex items-center justify-center shrink-0">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"></path>
+          </svg>
+        </div>
+        <div class="kpi-text text-left">
+          <p data-i18n="kpiReqTitle" class="text-xs font-bold text-slate-500">طلبات العملاء</p>
+          <p id="kpiReq" class="text-2xl font-black text-slate-900 my-0.5">0</p>
+          <p id="kpiReqActive" class="text-[11px] font-bold text-amber-600">نشط: 0 طلب</p>
+        </div>
+      </div>
+
+      <!-- Card 4: Expected Commissions -->
+      <div onclick="switchTab('reports')" class="cursor-pointer bg-white rounded-2xl p-4 border border-slate-200/80 shadow-xs hover:shadow-md transition flex items-center justify-between">
+        <div class="w-12 h-12 rounded-2xl bg-purple-50 text-purple-600 flex items-center justify-center shrink-0">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+          </svg>
+        </div>
+        <div class="kpi-text text-left">
+          <p data-i18n="kpiCommTitle" class="text-xs font-bold text-slate-500">العمولات المتوقعة</p>
+          <p id="kpiComm" class="text-xl font-black text-slate-900 my-0.5">0 ج.م</p>
+          <p id="kpiCommClosed" class="text-[11px] font-bold text-purple-600">مغلق: 0 صفقة</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Datalist for Cities & Compounds -->
+    <datalist id="locationsList">
+      <option value="القاهرة الجديدة - التجمع الخامس">
+      </option><option value="القاهرة الجديدة - مدينتي">
+      </option><option value="القاهرة الجديدة - الرحاب">
+      </option><option value="العاصمة الإدارية الجديدة">
+      </option><option value="الشيخ زايد">
+      </option><option value="6 أكتوبر">
+      </option><option value="المعادي">
+      </option><option value="مدينة نصر">
+      </option><option value="الساحل الشمالي">
+      </option><option value="New Cairo - Fifth Settlement">
+      </option><option value="Madinaty">
+      </option><option value="El Rehab">
+      </option><option value="New Administrative Capital">
+      </option><option value="Sheikh Zayed">
+      </option><option value="6th of October">
+      </option><option value="Maadi">
+      </option><option value="North Coast">
+    </option></datalist>
+
+    <!-- SECTION: SALE / RENT / REQ TABLES -->
+    <section id="view-records" class="bg-white rounded-3xl border border-slate-200 shadow-xs p-4 md:p-6 space-y-4">
+      <div class="flex flex-wrap items-center justify-between gap-3">
+        <div>
+          <h2 id="sectionTitle" class="text-base md:text-lg font-extrabold text-slate-800">🏢 المتاح للبيع</h2>
+          <p id="sectionSubtitle" class="text-xs text-slate-500">قائمة الوحدات المعروضة للبيع في مختلف المدن والمناطق</p>
+        </div>
+
+        <div class="flex flex-wrap items-center gap-2 w-full md:w-auto">
+          <input id="searchInput" type="text" oninput="renderCurrentTable()" placeholder="بحث بالمنطقة، الهاتف، البروكر، السيلز..." class="flex-1 md:w-56 border border-slate-300 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-slate-800">
+          <select id="statusFilter" onchange="renderCurrentTable()" class="border border-slate-300 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-slate-800">
+            <option value="" data-i18n="filterAll">كل الحالات</option>
+            <option value="جديد" data-i18n="stNew">جديد</option>
+            <option value="جاري التواصل" data-i18n="stContacting">جاري التواصل</option>
+            <option value="معاد معاينة" data-i18n="stViewing">معاد معاينة</option>
+            <option value="تفاوض" data-i18n="stNegotiation">تفاوض</option>
+            <option value="تم التعاقد" data-i18n="stClosed">تم التعاقد</option>
+            <option value="ملغي" data-i18n="stCancelled">ملغي</option>
+          </select>
+          <button type="button" onclick="openAddModal()" data-i18n="btnAddRecord" class="w-full sm:w-auto bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-extrabold px-4 py-2.5 rounded-xl shadow transition">+ إضافة سجل جديد</button>
+        </div>
+      </div>
+
+      <!-- Empty State -->
+      <div id="emptyState" class="text-center py-12 px-4 border-2 border-dashed border-slate-200 rounded-2xl bg-slate-50/70">
+        <p class="text-3xl mb-2">📂</p>
+        <h3 data-i18n="emptyTitle" class="text-sm md:text-base font-extrabold text-slate-700">لا توجد بيانات مسجلة في هذا القسم حتى الآن</h3>
+        <p data-i18n="emptyDesc" class="text-xs text-slate-500 mt-1 max-w-md mx-auto">النظام يبدأ فارغاً تماماً (0 سجلات). يمكنك إضافة أول سجل يدوياً أو استيراد ملف Excel / CSV جاهز بضغطة زر.</p>
+        <div class="mt-4 flex flex-wrap justify-center gap-2">
+          <button type="button" onclick="openAddModal()" data-i18n="btnAddManual" class="bg-slate-900 text-white text-xs font-bold px-4 py-2.5 rounded-xl hover:bg-slate-800">+ إضافة يدوية</button>
+          <button type="button" onclick="document.getElementById('importFile').click()" data-i18n="btnImportSheet" class="bg-emerald-600 text-white text-xs font-bold px-4 py-2.5 rounded-xl hover:bg-emerald-700">📥 استيراد شيت Excel</button>
+        </div>
+      </div>
+
+      <!-- Data Table -->
+      <div id="tableWrapper" class="hidden overflow-x-auto">
+        <table id="dataTable" class="w-full text-right border-collapse text-xs">
+          <thead>
+            <tr id="tableHeadRow" class="bg-slate-900 text-white"></tr>
+          </thead>
+          <tbody id="tableBody" class="divide-y divide-slate-200"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- SECTION: SMART MATCHING -->
+    <section id="view-match" class="hidden bg-white rounded-3xl border border-slate-200 shadow-xs p-4 md:p-6 space-y-4">
+      <div class="flex flex-wrap items-center justify-between gap-2">
+        <div>
+          <h2 data-i18n="matchTitle" class="text-base md:text-lg font-extrabold text-slate-800">⚡ المطابقة الذكية بين العروض والطلبات</h2>
+          <p data-i18n="matchSub" class="text-xs text-slate-500">يقارن النظام تلقائياً نوع العملية (بيع/إيجار)، المنطقة، نوع الوحدة، والميزانية المرصودة</p>
+        </div>
+        <button type="button" onclick="renderMatches()" data-i18n="btnRefreshMatch" class="bg-purple-700 hover:bg-purple-800 text-white text-xs font-bold px-4 py-2 rounded-xl">🔄 تحديث المطابقة</button>
+      </div>
+      <div id="matchesContainer" class="space-y-3"></div>
+    </section>
+
+    <!-- SECTION: TASKS & REMINDERS -->
+    <section id="view-tasks" class="hidden bg-white rounded-3xl border border-slate-200 shadow-xs p-4 md:p-6 space-y-4">
+      <div class="flex flex-wrap items-center justify-between gap-3">
+        <div>
+          <h2 data-i18n="tasksTitle" class="text-base md:text-lg font-extrabold text-slate-800">📅 مفكرة المواعيد والمعاينات والتذكيرات</h2>
+          <p data-i18n="tasksSub" class="text-xs text-slate-500">سجّلي مواعيد المعاينات ومكالمات المتابعة وأضيفيها لتقويم جوجل (Google Calendar) ليرن هاتفك في الموعد</p>
+        </div>
+        <button type="button" onclick="openTaskModal()" data-i18n="btnAddTask" class="bg-amber-500 hover:bg-amber-600 text-slate-950 text-xs font-extrabold px-4 py-2.5 rounded-xl shadow">+ إضافة موعد / تذكير</button>
+      </div>
+      <div id="tasksContainer" class="grid grid-cols-1 md:grid-cols-2 gap-3"></div>
+    </section>
+
+    <!-- SECTION: REPORTS & COMMISSIONS (NEW #1 & #2) -->
+    <section id="view-reports" class="hidden space-y-4">
+      <!-- Commission Calculator Card -->
+      <div class="bg-white rounded-3xl border border-slate-200 shadow-xs p-4 md:p-6 space-y-4">
+        <div>
+          <h2 data-i18n="calcTitle" class="text-base md:text-lg font-extrabold text-slate-800">🧮 حاسبة العمولات وتوزيع الأرباح</h2>
+          <p data-i18n="calcSub" class="text-xs text-slate-500">احسبي إجمالي العمولة وصافي الشركة ونصيب السيلز والبروكر الخارجي لأي صفقة فوراً</p>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 text-xs bg-slate-50 p-4 rounded-2xl border border-slate-200">
+          <div>
+            <label data-i18n="calcPriceLbl" class="block font-bold text-slate-700 mb-1">قيمة الصفقة (ج.م)</label>
+            <input id="c_price" type="number" value="3000000" oninput="runCalc()" class="w-full border border-slate-300 rounded-xl px-3 py-2 bg-white font-bold">
+          </div>
+          <div>
+            <label data-i18n="calcTotalPctLbl" class="block font-bold text-slate-700 mb-1">نسبة العمولة الكلية (%)</label>
+            <input id="c_totalPct" type="number" step="0.1" value="2.5" oninput="runCalc()" class="w-full border border-slate-300 rounded-xl px-3 py-2 bg-white font-bold">
+          </div>
+          <div>
+            <label data-i18n="calcSalesPctLbl" class="block font-bold text-slate-700 mb-1">نسبة السيلز من العمولة (%)</label>
+            <input id="c_salesPct" type="number" step="1" value="25" oninput="runCalc()" class="w-full border border-slate-300 rounded-xl px-3 py-2 bg-white font-bold">
+          </div>
+          <div>
+            <label data-i18n="calcBrokerPctLbl" class="block font-bold text-slate-700 mb-1">نسبة البروكر / شريك (%)</label>
+            <input id="c_brokerPct" type="number" step="1" value="0" oninput="runCalc()" class="w-full border border-slate-300 rounded-xl px-3 py-2 bg-white font-bold">
+          </div>
+        </div>
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 text-xs">
+          <div class="p-3.5 rounded-2xl bg-emerald-50 border border-emerald-200">
+            <p data-i18n="calcResTotal" class="text-emerald-800 font-bold">إجمالي العمولة</p>
+            <p id="c_resTotal" class="text-lg font-black text-emerald-900 mt-1">75,000 ج.م</p>
+          </div>
+          <div class="p-3.5 rounded-2xl bg-indigo-50 border border-indigo-200">
+            <p data-i18n="calcResSales" class="text-indigo-800 font-bold">نصيب السيلز</p>
+            <p id="c_resSales" class="text-lg font-black text-indigo-900 mt-1">18,750 ج.م</p>
+          </div>
+          <div class="p-3.5 rounded-2xl bg-amber-50 border border-amber-200">
+            <p data-i18n="calcResBroker" class="text-amber-800 font-bold">نصيب البروكر / الشريك</p>
+            <p id="c_resBroker" class="text-lg font-black text-amber-900 mt-1">0 ج.م</p>
+          </div>
+          <div class="p-3.5 rounded-2xl bg-slate-900 text-white">
+            <p data-i18n="calcResNet" class="text-slate-300 font-bold">صافي ربح الشركة</p>
+            <p id="c_resNet" class="text-lg font-black text-amber-400 mt-1">56,250 ج.م</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Visual Charts Grid -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        <div class="bg-white rounded-3xl border border-slate-200 shadow-xs p-4 md:p-6">
+          <h3 data-i18n="chartStatusTitle" class="text-sm font-extrabold text-slate-800 mb-3">📈 توزيع حالات الصفقات (Pipeline)</h3>
+          <div class="h-64 flex items-center justify-center">
+            <canvas id="statusChart"></canvas>
+          </div>
+        </div>
+        <div class="bg-white rounded-3xl border border-slate-200 shadow-xs p-4 md:p-6">
+          <h3 data-i18n="chartSalesTitle" class="text-sm font-extrabold text-slate-800 mb-3">🏆 أداء السيلز (عدد السجلات والصفقات)</h3>
+          <div class="h-64 flex items-center justify-center">
+            <canvas id="salesChart"></canvas>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION: ADS & WHATSAPP GENERATOR -->
+    <section id="view-ads" class="hidden bg-white rounded-3xl border border-slate-200 shadow-xs p-4 md:p-6 space-y-4">
+      <div>
+        <h2 data-i18n="adsTitle" class="text-base md:text-lg font-extrabold text-slate-800">📣 مولّد الإعلانات ورسائل الواتساب الجاهزة</h2>
+        <p data-i18n="adsSub" class="text-xs text-slate-500">اختاري أي وحدة أو طلب لتوليد بوست احترافي لجروبات فيسبوك أو رسالة واتساب مباشرة برقم التواصل المسجل</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-3 bg-slate-50 p-4 rounded-2xl border border-slate-200">
+        <div>
+          <label data-i18n="adSecLabel" class="block text-xs font-bold text-slate-700 mb-1">القسم</label>
+          <select id="adSourceType" onchange="populateAdItems()" class="w-full border border-slate-300 rounded-xl px-3 py-2 text-xs bg-white">
+            <option value="sale" data-i18n="optSale">المتاح للبيع</option>
+            <option value="rent" data-i18n="optRent">المتاح للإيجار</option>
+            <option value="req" data-i18n="optReq">طلبات العملاء (المطلوب)</option>
+          </select>
+        </div>
+        <div>
+          <label data-i18n="adItemLabel" class="block text-xs font-bold text-slate-700 mb-1">اختاري الوحدة / الطلب</label>
+          <select id="adItemSelect" onchange="generateAdText()" class="w-full border border-slate-300 rounded-xl px-3 py-2 text-xs bg-white"></select>
+        </div>
+        <div>
+          <label data-i18n="adTplLabel" class="block text-xs font-bold text-slate-700 mb-1">نوع الصيغة</label>
+          <select id="adTemplateType" onchange="generateAdText()" class="w-full border border-slate-300 rounded-xl px-3 py-2 text-xs bg-white">
+            <option value="fb" data-i18n="tplFb">بوست إعلان فيسبوك / جروبات</option>
+            <option value="wa_client" data-i18n="tplWaClient">رسالة واتساب للعميل</option>
+            <option value="wa_owner" data-i18n="tplWaOwner">رسالة واتساب للمالك / البروكر</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="space-y-2">
+        <textarea id="generatedAdBox" rows="8" class="w-full border border-slate-300 rounded-2xl p-4 text-xs md:text-sm leading-relaxed focus:outline-none focus:border-slate-800" placeholder="ستظهر صيغة الإعلان هنا بمجرد إضافة سجلات واختيارها..."></textarea>
+        <div class="flex flex-wrap gap-2">
+          <button type="button" onclick="copyAdText()" data-i18n="btnCopyAd" class="bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold px-4 py-2.5 rounded-xl">📋 نسخ النص</button>
+          <button type="button" onclick="sendAdViaWhatsapp()" data-i18n="btnSendWa" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold px-4 py-2.5 rounded-xl">💬 فتح في واتساب</button>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- ADD / EDIT RECORD MODAL -->
+  <div id="recordModal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-2xl w-full p-5 md:p-6 shadow-2xl max-h-[90vh] overflow-y-auto space-y-4">
+      <div class="flex items-center justify-between border-b pb-3">
+        <h3 id="modalTitle" class="text-base font-extrabold text-slate-800">إضافة سجل جديد</h3>
+        <button type="button" onclick="closeRecordModal()" class="text-slate-400 hover:text-slate-700 text-lg font-bold">✕</button>
+      </div>
+
+      <form id="recordForm" onsubmit="saveRecord(event)" class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
+        <input type="hidden" id="editId">
+
+        <div>
+          <label data-i18n="lblLocation" class="block font-bold text-slate-700 mb-1">المدينة / الكمبوند / المنطقة *</label>
+          <input id="f_location" list="locationsList" required="" class="w-full border border-slate-300 rounded-xl px-3 py-2">
+        </div>
+
+        <div>
+          <label data-i18n="lblUnitType" class="block font-bold text-slate-700 mb-1">نوع الوحدة *</label>
+          <select id="f_unitType" class="w-full border border-slate-300 rounded-xl px-3 py-2 bg-white">
+            <option value="شقة" data-i18n="uApt">شقة</option>
+            <option value="شقة أرضي بحديقة" data-i18n="uGround">شقة أرضي بحديقة</option>
+            <option value="دوبليكس" data-i18n="uDuplex">دوبليكس</option>
+            <option value="بنتهاوس / روف" data-i18n="uPenthouse">بنتهاوس / روف</option>
+            <option value="ستوديو" data-i18n="uStudio">ستوديو</option>
+            <option value="فيلا / تاون هاوس" data-i18n="uVilla">فيلا / تاون هاوس</option>
+            <option value="محل / مكتب إداري" data-i18n="uCommercial">محل / مكتب إداري</option>
+          </select>
+        </div>
+
+        <div>
+          <label data-i18n="lblArea" class="block font-bold text-slate-700 mb-1">المساحة (م²)</label>
+          <input id="f_area" type="text" class="w-full border border-slate-300 rounded-xl px-3 py-2">
+        </div>
+
+        <div>
+          <label data-i18n="lblRooms" class="block font-bold text-slate-700 mb-1">عدد الغرف / الحمامات</label>
+          <input id="f_rooms" type="text" class="w-full border border-slate-300 rounded-xl px-3 py-2">
+        </div>
+
+        <div>
+          <label data-i18n="lblPrice" class="block font-bold text-slate-700 mb-1">السعر / الميزانية (ج.م) *</label>
+          <input id="f_price" type="number" required="" class="w-full border border-slate-300 rounded-xl px-3 py-2">
+        </div>
+
+        <div>
+          <label data-i18n="lblCommPct" class="block font-bold text-slate-700 mb-1">نسبة العمولة (%)</label>
+          <input id="f_commPct" type="number" step="0.1" value="2.5" class="w-full border border-slate-300 rounded-xl px-3 py-2">
+        </div>
+
+        <div>
+          <label data-i18n="lblPayment" class="block font-bold text-slate-700 mb-1">نظام السداد / نوع الإيجار</label>
+          <input id="f_payment" type="text" class="w-full border border-slate-300 rounded-xl px-3 py-2">
+        </div>
+
+        <div>
+          <label data-i18n="lblFinishing" class="block font-bold text-slate-700 mb-1">التشطيب والفرش / المواصفات</label>
+          <input id="f_finishing" type="text" class="w-full border border-slate-300 rounded-xl px-3 py-2">
+        </div>
+
+        <div>
+          <label data-i18n="lblDate" class="block font-bold text-slate-700 mb-1">تاريخ نزول الإعلان / الطلب *</label>
+          <input id="f_date" type="date" required="" class="w-full border border-slate-300 rounded-xl px-3 py-2">
+        </div>
+
+        <div>
+          <label data-i18n="lblPhone" class="block font-bold text-slate-700 mb-1">رقم التليفون</label>
+          <input id="f_phone" type="text" dir="ltr" placeholder="01xxxxxxxxx" class="w-full border border-slate-300 rounded-xl px-3 py-2 text-left">
+        </div>
+
+        <div>
+          <label data-i18n="lblBroker" class="block font-bold text-slate-700 mb-1">اسم البروكر / العميل</label>
+          <input id="f_broker" type="text" class="w-full border border-slate-300 rounded-xl px-3 py-2">
+        </div>
+
+        <div>
+          <label data-i18n="lblSales" class="block font-bold text-slate-700 mb-1">اسم السيلز المسؤول</label>
+          <input id="f_sales" type="text" class="w-full border border-slate-300 rounded-xl px-3 py-2">
+        </div>
+
+        <div>
+          <label data-i18n="lblStatus" class="block font-bold text-slate-700 mb-1">حالة المتابعة (Pipeline)</label>
+          <select id="f_status" class="w-full border border-slate-300 rounded-xl px-3 py-2 bg-white">
+            <option value="جديد" data-i18n="stNew">جديد</option>
+            <option value="جاري التواصل" data-i18n="stContacting">جاري التواصل</option>
+            <option value="معاد معاينة" data-i18n="stViewing">معاد معاينة</option>
+            <option value="تفاوض" data-i18n="stNegotiation">تفاوض</option>
+            <option value="تم التعاقد" data-i18n="stClosed">تم التعاقد</option>
+            <option value="ملغي" data-i18n="stCancelled">ملغي</option>
+          </select>
+        </div>
+
+        <div>
+          <label data-i18n="lblPhotoUrl" class="block font-bold text-slate-700 mb-1">رابط ألبوم الصور / Drive / فيديو (اختياري)</label>
+          <input id="f_photoUrl" type="url" dir="ltr" placeholder="https://drive.google.com/..." class="w-full border border-slate-300 rounded-xl px-3 py-2 text-left">
+        </div>
+
+        <div class="md:col-span-2">
+          <label data-i18n="lblLink" class="block font-bold text-slate-700 mb-1">رابط الإعلان الأصلي / المصدر (اختياري)</label>
+          <input id="f_link" type="url" dir="ltr" placeholder="https://..." class="w-full border border-slate-300 rounded-xl px-3 py-2 text-left">
+        </div>
+
+        <div class="md:col-span-2">
+          <label data-i18n="lblNotes" class="block font-bold text-slate-700 mb-1">ملاحظات إضافية</label>
+          <textarea id="f_notes" rows="2" class="w-full border border-slate-300 rounded-xl px-3 py-2"></textarea>
+        </div>
+
+        <div class="md:col-span-2 flex justify-end gap-2 pt-2 border-t">
+          <button type="button" onclick="closeRecordModal()" data-i18n="btnCancel" class="px-4 py-2 rounded-xl border border-slate-300 font-bold text-slate-600">إلغاء</button>
+          <button type="submit" data-i18n="btnSave" class="px-5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold">💾 حفظ البيانات</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- BROCHURE PRINT / PREVIEW MODAL (NEW #3) -->
+  <div id="brochureModal" class="hidden fixed inset-0 bg-slate-900/70 backdrop-blur-xs z-50 flex items-center justify-center p-4">
+    <div id="brochureCard" class="bg-white rounded-3xl max-w-xl w-full p-6 shadow-2xl space-y-4 border border-slate-200">
+      <div class="bg-[#0f172a] text-white rounded-2xl p-5 flex items-center justify-between">
+        <div>
+          <span id="brBadge" class="bg-emerald-500/20 text-emerald-300 text-[11px] font-bold px-2.5 py-0.5 rounded-full">عرض عقاري مميز</span>
+          <h3 id="brTitle" class="text-lg font-black mt-1.5">شقة للبيع</h3>
+          <p id="brLoc" class="text-xs text-slate-300 mt-0.5">القاهرة الجديدة</p>
+        </div>
+        <div class="text-left">
+          <p id="brPriceLabel" class="text-[11px] text-slate-400">السعر المطلوب</p>
+          <p id="brPrice" class="text-xl font-black text-amber-400">0 ج.م</p>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-2 gap-3 text-xs">
+        <div class="p-3 rounded-xl bg-slate-50 border border-slate-200">
+          <span class="text-slate-500 block" data-i18n="brAreaLbl">المساحة</span>
+          <strong id="brArea" class="text-sm text-slate-800">—</strong>
+        </div>
+        <div class="p-3 rounded-xl bg-slate-50 border border-slate-200">
+          <span class="text-slate-500 block" data-i18n="brRoomsLbl">التقسيم</span>
+          <strong id="brRooms" class="text-sm text-slate-800">—</strong>
+        </div>
+        <div class="p-3 rounded-xl bg-slate-50 border border-slate-200">
+          <span class="text-slate-500 block" data-i18n="brFinishLbl">التشطيب</span>
+          <strong id="brFinish" class="text-sm text-slate-800">—</strong>
+        </div>
+        <div class="p-3 rounded-xl bg-slate-50 border border-slate-200">
+          <span class="text-slate-500 block" data-i18n="brPayLbl">نظام السداد</span>
+          <strong id="brPay" class="text-sm text-slate-800">—</strong>
+        </div>
+      </div>
+
+      <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-200 text-xs space-y-1">
+        <strong class="text-slate-700 block" data-i18n="brNotesLbl">تفاصيل ومميزات الوحدة:</strong>
+        <p id="brNotes" class="text-slate-600 leading-relaxed">—</p>
+        <p id="brPhotoLine" class="pt-1 text-blue-700 font-bold break-all"></p>
+      </div>
+
+      <div class="p-3.5 rounded-2xl bg-emerald-50 border border-emerald-200 flex items-center justify-between text-xs">
+        <span class="font-bold text-emerald-900" data-i18n="brContactLbl">للاستفسار وتحديد ميعاد معاينة:</span>
+        <span id="brContact" class="font-black text-emerald-800 text-sm" dir="ltr">01023088574</span>
+      </div>
+
+      <div id="brochureActions" class="flex flex-wrap justify-end gap-2 pt-2 border-t">
+        <button type="button" onclick="window.print()" data-i18n="btnPrintPdf" class="bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold px-4 py-2.5 rounded-xl">🖨️ طباعة / حفظ PDF</button>
+        <button type="button" onclick="sendBrochureWa()" data-i18n="btnSendBrochureWa" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold px-4 py-2.5 rounded-xl">💬 إرسال واتساب</button>
+        <button type="button" onclick="closeBrochureModal()" data-i18n="btnClose" class="border border-slate-300 text-slate-600 text-xs font-bold px-4 py-2.5 rounded-xl">إغلاق</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ADD TASK / REMINDER MODAL -->
+  <div id="taskModal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-lg w-full p-5 shadow-2xl space-y-4">
+      <div class="flex items-center justify-between border-b pb-3">
+        <h3 data-i18n="taskModalTitle" class="text-base font-extrabold text-slate-800">📅 إضافة موعد معاينة أو متابعة</h3>
+        <button type="button" onclick="closeTaskModal()" class="text-slate-400 hover:text-slate-700 text-lg font-bold">✕</button>
+      </div>
+      <form onsubmit="saveTask(event)" class="space-y-3 text-xs">
+        <div>
+          <label data-i18n="lblTaskTitle" class="block font-bold text-slate-700 mb-1">عنوان الموعد / المهمة *</label>
+          <input id="t_title" required="" class="w-full border border-slate-300 rounded-xl px-3 py-2">
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label data-i18n="lblTaskDate" class="block font-bold text-slate-700 mb-1">التاريخ *</label>
+            <input id="t_date" type="date" required="" class="w-full border border-slate-300 rounded-xl px-3 py-2">
+          </div>
+          <div>
+            <label data-i18n="lblTaskTime" class="block font-bold text-slate-700 mb-1">الوقت *</label>
+            <input id="t_time" type="time" required="" value="14:00" class="w-full border border-slate-300 rounded-xl px-3 py-2">
+          </div>
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label data-i18n="lblTaskPhone" class="block font-bold text-slate-700 mb-1">رقم تليفون العميل/المالك</label>
+            <input id="t_phone" type="text" dir="ltr" placeholder="01xxxxxxxxx" class="w-full border border-slate-300 rounded-xl px-3 py-2 text-left">
+          </div>
+          <div>
+            <label data-i18n="lblTaskSales" class="block font-bold text-slate-700 mb-1">السيلز المسؤول</label>
+            <input id="t_sales" type="text" class="w-full border border-slate-300 rounded-xl px-3 py-2">
+          </div>
+        </div>
+        <div>
+          <label data-i18n="lblTaskNotes" class="block font-bold text-slate-700 mb-1">تفاصيل ومكان المقابلة</label>
+          <textarea id="t_notes" rows="2" class="w-full border border-slate-300 rounded-xl px-3 py-2"></textarea>
+        </div>
+        <div class="flex justify-end gap-2 pt-2 border-t">
+          <button type="button" onclick="closeTaskModal()" data-i18n="btnCancel" class="px-4 py-2 rounded-xl border border-slate-300 font-bold text-slate-600">إلغاء</button>
+          <button type="submit" data-i18n="btnSaveTask" class="px-5 py-2 rounded-xl bg-amber-500 hover:bg-amber-600 text-slate-950 font-extrabold">💾 حفظ الموعد</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    const STORAGE_KEY = 'crm_system_v4_data';
+    let currentTab = 'sale';
+    let activeBrochureItem = null;
+    let statusChartInstance = null;
+    let salesChartInstance = null;
+
+    const i18n = {
+      ar: {
+        toggleBtn: 'English',
+        badgeTitle: 'نظام إدارة العقارات والعملاء',
+        headerSub: 'إدارة شاملة للمعروض والمطلوب، المواعيد، المطابقة الذكية، العمولات، والتسويق',
+        waAdsLabel: 'واتساب الإعلانات:',
+        btnDownloadApp: '💻 تحميل البرنامج على جهازك',
+        btnImportExcel: '📥 استيراد Excel',
+        btnExportExcel: '📤 تصدير Excel',
+        tipBackup: 'حفظ نسخة احتياطية',
+        tipRestore: 'استرجاع نسخة احتياطية',
+        tipClear: 'مسح جميع البيانات',
+        reminderPrefix: '🔔 تنبيه المواعيد:',
+        btnViewReminders: 'عرض المواعيد',
+        tabSale: '🏢 المتاح للبيع',
+        tabRent: '🔑 المتاح للإيجار',
+        tabReq: '👥 المطلوب (طلبات العملاء)',
+        tabMatch: '⚡ المطابقة الذكية',
+        tabTasks: '📅 المواعيد والتذكيرات',
+        tabReports: '📊 التقارير والعمولات',
+        tabAds: '📣 مولّد الإعلانات والرسائل',
+        kpiSaleTitle: 'المتاح للبيع',
+        kpiRentTitle: 'المتاح للإيجار',
+        kpiReqTitle: 'طلبات العملاء',
+        kpiCommTitle: 'العمولات المتوقعة',
+        avgPrefix: 'متوسط:',
+        currency: 'ج.م',
+        activeReq: (n) => `نشط: ${n} طلب`,
+        closedDealsSub: (n) => `مغلق: ${n} صفقة`,
+        secSaleTitle: '🏢 المتاح للبيع',
+        secSaleSub: 'قائمة الوحدات المعروضة للبيع في مختلف المدن والمناطق',
+        secRentTitle: '🔑 المتاح للإيجار',
+        secRentSub: 'قائمة الوحدات المعروضة للإيجار (قانون جديد / مفروش / فندقي)',
+        secReqTitle: '👥 المطلوب (طلبات العملاء)',
+        secReqSub: 'طلبات العملاء الراغبين في الشراء أو الإيجار ومتابعة تنفيذها',
+        searchPlaceholder: 'بحث بالمنطقة، الهاتف، البروكر، السيلز...',
+        filterAll: 'كل الحالات',
+        stNew: 'جديد',
+        stContacting: 'جاري التواصل',
+        stViewing: 'معاد معاينة',
+        stNegotiation: 'تفاوض',
+        stClosed: 'تم التعاقد',
+        stCancelled: 'ملغي',
+        btnAddRecord: '+ إضافة سجل جديد',
+        emptyTitle: 'لا توجد بيانات مسجلة في هذا القسم حتى الآن',
+        emptyDesc: 'النظام يبدأ فارغاً تماماً (0 سجلات). يمكنك إضافة أول سجل يدوياً أو استيراد ملف Excel / CSV جاهز بضغطة زر.',
+        btnAddManual: '+ إضافة يدوية',
+        btnImportSheet: '📥 استيراد شيت Excel',
+        thLoc: 'المدينة / المنطقة',
+        thUnit: 'الوحدة والمساحة',
+        thPriceSale: 'السعر والعمولة',
+        thPriceRent: 'الإيجار والعمولة',
+        thPriceReq: 'الميزانية',
+        thPay: 'السداد / التشطيب',
+        thDateOffer: 'التاريخ',
+        thDateReq: 'تاريخ الطلب',
+        thPhone: 'رقم التليفون',
+        thBroker: 'البروكر / العميل',
+        thSales: 'السيلز',
+        thStatus: 'الحالة',
+        thActions: 'إجراءات',
+        matchTitle: '⚡ المطابقة الذكية بين العروض والطلبات',
+        matchSub: 'يقارن النظام تلقائياً نوع العملية (بيع/إيجار)، المنطقة، نوع الوحدة، والميزانية المرصودة',
+        btnRefreshMatch: '🔄 تحديث المطابقة',
+        matchEmpty: 'لا توجد مطابقات حالياً. أضيفي عروضاً (بيع أو إيجار) وطلبات عملاء وسيقوم النظام بربطها تلقائياً هنا.',
+        tasksTitle: '📅 مفكرة المواعيد والمعاينات والتذكيرات',
+        tasksSub: 'سجّلي مواعيد المعاينات ومكالمات المتابعة وأضيفيها لتقويم جوجل (Google Calendar) ليرن هاتفك في الموعد',
+        btnAddTask: '+ إضافة موعد / تذكير',
+        tasksEmpty: 'لا توجد مواعيد مسجلة حالياً. اضغطي على «+ إضافة موعد / تذكير» لتسجيل معايناتك ومكالماتك.',
+        calcTitle: '🧮 حاسبة العمولات وتوزيع الأرباح',
+        calcSub: 'احسبي إجمالي العمولة وصافي الشركة ونصيب السيلز والبروكر الخارجي لأي صفقة فوراً',
+        calcPriceLbl: 'قيمة الصفقة (ج.م)',
+        calcTotalPctLbl: 'نسبة العمولة الكلية (%)',
+        calcSalesPctLbl: 'نسبة السيلز من العمولة (%)',
+        calcBrokerPctLbl: 'نسبة البروكر / شريك (%)',
+        calcResTotal: 'إجمالي العمولة',
+        calcResSales: 'نصيب السيلز',
+        calcResBroker: 'نصيب البروكر / الشريك',
+        calcResNet: 'صافي ربح الشركة',
+        chartStatusTitle: '📈 توزيع حالات الصفقات (Pipeline)',
+        chartSalesTitle: '🏆 أداء السيلز (عدد السجلات والصفقات)',
+        adsTitle: '📣 مولّد الإعلانات ورسائل الواتساب الجاهزة',
+        adsSub: 'اختاري أي وحدة أو طلب لتوليد بوست احترافي لجروبات فيسبوك أو رسالة واتساب مباشرة برقم التواصل المسجل',
+        adSecLabel: 'القسم',
+        optSale: 'المتاح للبيع',
+        optRent: 'المتاح للإيجار',
+        optReq: 'طلبات العملاء (المطلوب)',
+        adItemLabel: 'اختاري الوحدة / الطلب',
+        adTplLabel: 'نوع الصيغة',
+        tplFb: 'بوست إعلان فيسبوك / جروبات',
+        tplWaClient: 'رسالة واتساب للعميل',
+        tplWaOwner: 'رسالة واتساب للمالك / البروكر',
+        adPlaceholder: 'ستظهر صيغة الإعلان هنا بمجرد إضافة سجلات واختيارها...',
+        adNoItems: 'لا توجد سجلات في هذا القسم بعد',
+        btnCopyAd: '📋 نسخ النص',
+        btnSendWa: '💬 فتح في واتساب',
+        modalAddSale: '➕ إضافة وحدة للبيع',
+        modalAddRent: '➕ إضافة وحدة للإيجار',
+        modalAddReq: '➕ إضافة طلب عميل جديد',
+        modalEdit: '✏️ تعديل البيانات',
+        lblLocation: 'المدينة / الكمبوند / المنطقة *',
+        lblUnitType: 'نوع الوحدة *',
+        uApt: 'شقة',
+        uGround: 'شقة أرضي بحديقة',
+        uDuplex: 'دوبليكس',
+        uPenthouse: 'بنتهاوس / روف',
+        uStudio: 'ستوديو',
+        uVilla: 'فيلا / تاون هاوس',
+        uCommercial: 'محل / مكتب إداري',
+        lblArea: 'المساحة (م²)',
+        lblRooms: 'عدد الغرف / الحمامات',
+        lblPrice: 'السعر / الميزانية (ج.م) *',
+        lblCommPct: 'نسبة العمولة (%)',
+        lblPayment: 'نظام السداد / نوع الإيجار',
+        lblFinishing: 'التشطيب والفرش / المواصفات',
+        lblDate: 'تاريخ نزول الإعلان / الطلب *',
+        lblPhone: 'رقم التليفون',
+        lblBroker: 'اسم البروكر / العميل',
+        lblSales: 'اسم السيلز المسؤول',
+        lblStatus: 'حالة المتابعة (Pipeline)',
+        lblPhotoUrl: 'رابط ألبوم الصور / Drive / فيديو (اختياري)',
+        lblLink: 'رابط الإعلان الأصلي / المصدر (اختياري)',
+        lblNotes: 'ملاحظات إضافية',
+        btnCancel: 'إلغاء',
+        btnSave: '💾 حفظ البيانات',
+        brAreaLbl: 'المساحة',
+        brRoomsLbl: 'التقسيم',
+        brFinishLbl: 'التشطيب',
+        brPayLbl: 'نظام السداد',
+        brNotesLbl: 'تفاصيل ومميزات الوحدة:',
+        brContactLbl: 'للاستفسار وتحديد ميعاد معاينة:',
+        btnPrintPdf: '🖨️ طباعة / حفظ PDF',
+        btnSendBrochureWa: '💬 إرسال واتساب',
+        btnClose: 'إغلاق',
+        taskModalTitle: '📅 إضافة موعد معاينة أو متابعة',
+        lblTaskTitle: 'عنوان الموعد / المهمة *',
+        lblTaskDate: 'التاريخ *',
+        lblTaskTime: 'الوقت *',
+        lblTaskPhone: 'رقم تليفون العميل/المالك',
+        lblTaskSales: 'السيلز المسؤول',
+        lblTaskNotes: 'تفاصيل ومكان المقابلة',
+        btnSaveTask: '💾 حفظ الموعد',
+        confirmDelete: 'هل أنت متأكد من حذف هذا السجل؟',
+        confirmClear: 'تحذير: سيتم مسح جميع البيانات والسجلات المسجلة. هل أنت متأكدة؟',
+        alertCopied: 'تم نسخ النص بنجاح!',
+        alertImported: (n) => `تم استيراد ${n} سجل بنجاح!`,
+        alertRestored: 'تم استرجاع النسخة الاحتياطية بنجاح!',
+        alertInvalidFile: 'ملف غير صالح',
+        dueBannerText: (n) => `لديك ${n} موعد/متابعة مستحقة اليوم أو متأخرة!`,
+        downloadFallbackMsg: 'تم تجهيز ملف البرنامج! إذا لم يبدأ التحميل تلقائياً من داخل نافذة المعاينة، انسخي الكود أو افتحي الملف في المتصفح.'
+      },
+      en: {
+        toggleBtn: 'العربية',
+        badgeTitle: 'Real Estate & Client Management',
+        headerSub: 'Complete management for listings, client requests, appointments, smart matching, commissions & marketing',
+        waAdsLabel: 'Ads WhatsApp:',
+        btnDownloadApp: '💻 Download App to Device',
+        btnImportExcel: '📥 Import Excel',
+        btnExportExcel: '📤 Export Excel',
+        tipBackup: 'Save Backup (JSON)',
+        tipRestore: 'Restore Backup',
+        tipClear: 'Clear All Data',
+        reminderPrefix: '🔔 Reminders Alert:',
+        btnViewReminders: 'View Schedule',
+        tabSale: '🏢 For Sale',
+        tabRent: '🔑 For Rent',
+        tabReq: '👥 Client Requests',
+        tabMatch: '⚡ Smart Matching',
+        tabTasks: '📅 Appointments & Tasks',
+        tabReports: '📊 Reports & Commissions',
+        tabAds: '📣 Ads & Message Generator',
+        kpiSaleTitle: 'Available for Sale',
+        kpiRentTitle: 'Available for Rent',
+        kpiReqTitle: 'Client Requests',
+        kpiCommTitle: 'Expected Commissions',
+        avgPrefix: 'Avg:',
+        currency: 'EGP',
+        activeReq: (n) => `Active: ${n} requests`,
+        closedDealsSub: (n) => `Closed: ${n} deals`,
+        secSaleTitle: '🏢 Properties for Sale',
+        secSaleSub: 'Manage available sale listings across all cities and compounds',
+        secRentTitle: '🔑 Properties for Rent',
+        secRentSub: 'Manage available rental listings (unfurnished, furnished, hotel-style)',
+        secReqTitle: '👥 Client Requests (Wanted)',
+        secReqSub: 'Track buyer and tenant requirements and follow-up pipeline',
+        searchPlaceholder: 'Search location, phone, broker, sales...',
+        filterAll: 'All Statuses',
+        stNew: 'New',
+        stContacting: 'Contacting',
+        stViewing: 'Viewing Scheduled',
+        stNegotiation: 'Negotiating',
+        stClosed: 'Closed Deal',
+        stCancelled: 'Cancelled',
+        btnAddRecord: '+ Add New Record',
+        emptyTitle: 'No records added in this section yet',
+        emptyDesc: 'The system starts completely clean (0 records). Add your first record manually or import an Excel / CSV sheet.',
+        btnAddManual: '+ Add Manually',
+        btnImportSheet: '📥 Import Excel Sheet',
+        thLoc: 'City / Area',
+        thUnit: 'Unit & Area',
+        thPriceSale: 'Price & Comm.',
+        thPriceRent: 'Rent & Comm.',
+        thPriceReq: 'Budget',
+        thPay: 'Payment / Finishing',
+        thDateOffer: 'Date',
+        thDateReq: 'Request Date',
+        thPhone: 'Phone',
+        thBroker: 'Broker / Client',
+        thSales: 'Sales Agent',
+        thStatus: 'Status',
+        thActions: 'Actions',
+        matchTitle: '⚡ Smart Matching (Listings vs. Requests)',
+        matchSub: 'Automatically matches deal type (Sale/Rent), location, property type, and budget',
+        btnRefreshMatch: '🔄 Refresh Matches',
+        matchEmpty: 'No matches yet. Add properties (Sale or Rent) and client requests to auto-match them here.',
+        tasksTitle: '📅 Appointments, Viewings & Reminders',
+        tasksSub: 'Schedule property viewings and follow-up calls, and sync directly to Google Calendar',
+        btnAddTask: '+ Add Appointment / Reminder',
+        tasksEmpty: 'No appointments scheduled yet. Click "+ Add Appointment / Reminder" to add one.',
+        calcTitle: '🧮 Commission & Profit Split Calculator',
+        calcSub: 'Instantly calculate gross commission, sales agent share, external broker split, and net company profit',
+        calcPriceLbl: 'Deal Value (EGP)',
+        calcTotalPctLbl: 'Total Commission (%)',
+        calcSalesPctLbl: 'Sales Agent Share (%)',
+        calcBrokerPctLbl: 'External Broker Share (%)',
+        calcResTotal: 'Gross Commission',
+        calcResSales: 'Sales Agent Share',
+        calcResBroker: 'Broker / Partner Share',
+        calcResNet: 'Net Company Profit',
+        chartStatusTitle: '📈 Deals Pipeline Distribution',
+        chartSalesTitle: '🏆 Sales Agent Performance',
+        adsTitle: '📣 Marketing Ads & WhatsApp Message Generator',
+        adsSub: 'Select any property or request to generate ready-to-post Facebook ads or direct WhatsApp messages',
+        adSecLabel: 'Section',
+        optSale: 'For Sale',
+        optRent: 'For Rent',
+        optReq: 'Client Requests',
+        adItemLabel: 'Select Property / Request',
+        adTplLabel: 'Template Type',
+        tplFb: 'Facebook / Social Media Ad Post',
+        tplWaClient: 'WhatsApp Message to Client',
+        tplWaOwner: 'WhatsApp Message to Owner / Broker',
+        adPlaceholder: 'Generated ad copy will appear here once you add and select a record...',
+        adNoItems: 'No records in this section yet',
+        btnCopyAd: '📋 Copy Text',
+        btnSendWa: '💬 Open in WhatsApp',
+        modalAddSale: '➕ Add Property for Sale',
+        modalAddRent: '➕ Add Property for Rent',
+        modalAddReq: '➕ Add New Client Request',
+        modalEdit: '✏️ Edit Record',
+        lblLocation: 'City / Compound / Area *',
+        lblUnitType: 'Unit Type *',
+        uApt: 'Apartment',
+        uGround: 'Ground w/ Garden',
+        uDuplex: 'Duplex',
+        uPenthouse: 'Penthouse / Roof',
+        uStudio: 'Studio',
+        uVilla: 'Villa / Townhouse',
+        uCommercial: 'Shop / Office',
+        lblArea: 'Area (m²)',
+        lblRooms: 'Bedrooms / Bathrooms',
+        lblPrice: 'Price / Budget (EGP) *',
+        lblCommPct: 'Commission (%)',
+        lblPayment: 'Payment Plan / Rent Type',
+        lblFinishing: 'Finishing & Furnishing',
+        lblDate: 'Listing / Request Date *',
+        lblPhone: 'Phone Number',
+        lblBroker: 'Broker / Client Name',
+        lblSales: 'Assigned Sales Agent',
+        lblStatus: 'Pipeline Status',
+        lblPhotoUrl: 'Photo Album / Drive / Video Link (Optional)',
+        lblLink: 'Original Ad / Source Link (Optional)',
+        lblNotes: 'Additional Notes',
+        btnCancel: 'Cancel',
+        btnSave: '💾 Save Record',
+        brAreaLbl: 'Area',
+        brRoomsLbl: 'Layout',
+        brFinishLbl: 'Finishing',
+        brPayLbl: 'Payment Terms',
+        brNotesLbl: 'Property Highlights & Details:',
+        brContactLbl: 'For inquiries & viewing appointments:',
+        btnPrintPdf: '🖨️ Print / Save PDF',
+        btnSendBrochureWa: '💬 Send via WhatsApp',
+        btnClose: 'Close',
+        taskModalTitle: '📅 Add Viewing or Follow-up Appointment',
+        lblTaskTitle: 'Appointment / Task Title *',
+        lblTaskDate: 'Date *',
+        lblTaskTime: 'Time *',
+        lblTaskPhone: 'Client / Owner Phone',
+        lblTaskSales: 'Assigned Sales Agent',
+        lblTaskNotes: 'Meeting Location & Details',
+        btnSaveTask: '💾 Save Appointment',
+        confirmDelete: 'Are you sure you want to delete this record?',
+        confirmClear: 'Warning: All saved records and tasks will be permanently deleted. Continue?',
+        alertCopied: 'Text copied to clipboard!',
+        alertImported: (n) => `Successfully imported ${n} records!`,
+        alertRestored: 'Backup restored successfully!',
+        alertInvalidFile: 'Invalid backup file',
+        dueBannerText: (n) => `You have ${n} appointment(s)/follow-up(s) due today or overdue!`,
+        downloadFallbackMsg: 'App file prepared! If your preview sandbox blocks automatic downloads, open the downloaded file directly in Chrome/Edge.'
+      }
+    };
+
+    const statusDisplayMap = {
+      'جديد': { ar: 'جديد', en: 'New', cls: 'bg-blue-100 text-blue-800' },
+      'جاري التواصل': { ar: 'جاري التواصل', en: 'Contacting', cls: 'bg-sky-100 text-sky-800' },
+      'معاد معاينة': { ar: 'معاد معاينة', en: 'Viewing', cls: 'bg-amber-100 text-amber-800' },
+      'تفاوض': { ar: 'تفاوض', en: 'Negotiating', cls: 'bg-purple-100 text-purple-800' },
+      'تم التعاقد': { ar: 'تم التعاقد', en: 'Closed Deal', cls: 'bg-emerald-100 text-emerald-800' },
+      'ملغي': { ar: 'ملغي', en: 'Cancelled', cls: 'bg-rose-100 text-rose-800' }
+    };
+
+    const unitDisplayMap = {
+      'شقة': { ar: 'شقة', en: 'Apartment' },
+      'شقة أرضي بحديقة': { ar: 'شقة أرضي بحديقة', en: 'Ground w/ Garden' },
+      'دوبليكس': { ar: 'دوبليكس', en: 'Duplex' },
+      'بنتهاوس / روف': { ar: 'بنتهاوس / روف', en: 'Penthouse / Roof' },
+      'ستوديو': { ar: 'ستوديو', en: 'Studio' },
+      'فيلا / تاون هاوس': { ar: 'فيلا / تاون هاوس', en: 'Villa / Townhouse' },
+      'محل / مكتب إداري': { ar: 'محل / مكتب إداري', en: 'Shop / Office' }
+    };
+
+    let db = {
+      lang: 'ar',
+      whatsapp: '01023088574',
+      sale: [],
+      rent: [],
+      req: [],
+      tasks: []
+    };
+
+    function t(key) {
+      return (i18n[db.lang] && i18n[db.lang][key]) || i18n.ar[key] || key;
+    }
+
+    function applyLanguage() {
+      const lang = db.lang || 'ar';
+      const isEn = lang === 'en';
+      const root = document.getElementById('htmlRoot');
+      root.setAttribute('lang', lang);
+      root.setAttribute('dir', isEn ? 'ltr' : 'rtl');
+
+      document.getElementById('langToggleLabel').textContent = t('toggleBtn');
+      document.getElementById('searchInput').placeholder = t('searchPlaceholder');
+      document.getElementById('generatedAdBox').placeholder = t('adPlaceholder');
+      document.getElementById('btnBackup').title = t('tipBackup');
+      document.getElementById('btnRestore').title = t('tipRestore');
+      document.getElementById('btnClear').title = t('tipClear');
+
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        const val = t(key);
+        if (typeof val === 'string') el.textContent = val;
+      });
+
+      document.querySelectorAll('.kpi-text').forEach(el => {
+        el.classList.toggle('text-right', isEn);
+        el.classList.toggle('text-left', !isEn);
+      });
+      const tbl = document.getElementById('dataTable');
+      tbl.classList.toggle('text-left', isEn);
+      tbl.classList.toggle('text-right', !isEn);
+
+      if (['sale', 'rent', 'req'].includes(currentTab)) {
+        const map = {
+          sale: ['secSaleTitle', 'secSaleSub'],
+          rent: ['secRentTitle', 'secRentSub'],
+          req: ['secReqTitle', 'secReqSub']
+        };
+        document.getElementById('sectionTitle').textContent = t(map[currentTab][0]);
+        document.getElementById('sectionSubtitle').textContent = t(map[currentTab][1]);
+      }
+
+      runCalc();
+      updateAllViews();
+    }
+
+    function toggleLanguage() {
+      db.lang = db.lang === 'ar' ? 'en' : 'ar';
+      try { localStorage.setItem(STORAGE_KEY, JSON.stringify(db)); } catch(e) {}
+      applyLanguage();
+    }
+
+    function loadDB() {
+      try {
+        const saved = localStorage.getItem(STORAGE_KEY);
+        if (saved) {
+          const parsed = JSON.parse(saved);
+          db = { ...db, ...parsed };
+        }
+      } catch (e) { console.error(e); }
+      document.getElementById('globalWhatsapp').value = db.whatsapp || '01023088574';
+      applyLanguage();
+    }
+
+    function saveDB() {
+      try { localStorage.setItem(STORAGE_KEY, JSON.stringify(db)); } catch(e) {}
+      updateAllViews();
+    }
+
+    function saveWhatsapp(val) {
+      db.whatsapp = val.trim() || '01023088574';
+      saveDB();
+    }
+
+    function formatWaNumber(num) {
+      let clean = String(num || '').replace(/\D/g, '');
+      if (clean.startsWith('01') && clean.length === 11) return '2' + clean;
+      return clean;
+    }
+
+    function switchTab(tab) {
+      currentTab = tab;
+      ['sale', 'rent', 'req', 'match', 'tasks', 'reports', 'ads'].forEach(tb => {
+        const btn = document.getElementById('tab-' + tb);
+        if (tb === tab) {
+          btn.className = 'tab-pill-active shrink-0 px-4 py-2.5 rounded-2xl text-xs font-extrabold transition flex items-center gap-2';
+        } else {
+          btn.className = 'tab-pill-inactive shrink-0 px-4 py-2.5 rounded-2xl text-xs font-extrabold transition flex items-center gap-2';
+        }
+      });
+
+      document.getElementById('view-records').classList.toggle('hidden', !['sale', 'rent', 'req'].includes(tab));
+      document.getElementById('view-match').classList.toggle('hidden', tab !== 'match');
+      document.getElementById('view-tasks').classList.toggle('hidden', tab !== 'tasks');
+      document.getElementById('view-reports').classList.toggle('hidden', tab !== 'reports');
+      document.getElementById('view-ads').classList.toggle('hidden', tab !== 'ads');
+
+      if (['sale', 'rent', 'req'].includes(tab)) {
+        const map = {
+          sale: ['secSaleTitle', 'secSaleSub'],
+          rent: ['secRentTitle', 'secRentSub'],
+          req: ['secReqTitle', 'secReqSub']
+        };
+        document.getElementById('sectionTitle').textContent = t(map[tab][0]);
+        document.getElementById('sectionSubtitle').textContent = t(map[tab][1]);
+        renderCurrentTable();
+      } else if (tab === 'match') {
+        renderMatches();
+      } else if (tab === 'tasks') {
+        renderTasks();
+      } else if (tab === 'reports') {
+        renderCharts();
+      } else if (tab === 'ads') {
+        populateAdItems();
+      }
+    }
+
+    function renderCurrentTable() {
+      if (!['sale', 'rent', 'req'].includes(currentTab)) return;
+      const list = db[currentTab] || [];
+      const q = document.getElementById('searchInput').value.trim().toLowerCase();
+      const st = document.getElementById('statusFilter').value;
+
+      const filtered = list.filter(item => {
+        const matchQ = !q || Object.values(item).some(v => String(v || '').toLowerCase().includes(q));
+        const matchSt = !st || item.status === st;
+        return matchQ && matchSt;
+      });
+
+      const emptyEl = document.getElementById('emptyState');
+      const wrapEl = document.getElementById('tableWrapper');
+      const headRow = document.getElementById('tableHeadRow');
+      const bodyEl = document.getElementById('tableBody');
+
+      if (list.length === 0) {
+        emptyEl.classList.remove('hidden');
+        wrapEl.classList.add('hidden');
+        return;
+      }
+      emptyEl.classList.add('hidden');
+      wrapEl.classList.remove('hidden');
+
+      const priceLabel = currentTab === 'req' ? t('thPriceReq') : (currentTab === 'rent' ? t('thPriceRent') : t('thPriceSale'));
+      const dateLabel = currentTab === 'req' ? t('thDateReq') : t('thDateOffer');
+
+      headRow.innerHTML = `
+        <th class="p-3">#</th>
+        <th class="p-3">${t('thLoc')}</th>
+        <th class="p-3">${t('thUnit')}</th>
+        <th class="p-3">${priceLabel}</th>
+        <th class="p-3">${t('thPay')}</th>
+        <th class="p-3">${dateLabel}</th>
+        <th class="p-3">${t('thPhone')}</th>
+        <th class="p-3">${t('thBroker')}</th>
+        <th class="p-3">${t('thSales')}</th>
+        <th class="p-3">${t('thStatus')}</th>
+        <th class="p-3 text-center">${t('thActions')}</th>
+      `;
+
+      bodyEl.innerHTML = filtered.map((item, idx) => {
+        const waNum = formatWaNumber(item.phone);
+        const phoneHtml = item.phone
+          ? `<div class="flex items-center gap-1.5" dir="ltr">
+               <span class="font-bold text-slate-800">${item.phone}</span>
+               <a href="https://wa.me/${waNum}" target="_blank" class="bg-emerald-100 text-emerald-700 px-1.5 py-0.5 rounded font-bold hover:bg-emerald-200" title="WhatsApp">WA</a>
+             </div>`
+          : '<span class="text-slate-400">—</span>';
+
+        const stObj = statusDisplayMap[item.status] || { ar: item.status || 'جديد', en: item.status || 'New', cls: 'bg-slate-100 text-slate-700' };
+        const stText = db.lang === 'en' ? stObj.en : stObj.ar;
+        const unitObj = unitDisplayMap[item.unitType] || { ar: item.unitType || 'شقة', en: item.unitType || 'Apartment' };
+        const unitText = db.lang === 'en' ? unitObj.en : unitObj.ar;
+
+        const commPct = Number(item.commPct || 0);
+        const commVal = Math.round((Number(item.price || 0) * commPct) / 100);
+        const commBadge = (currentTab !== 'req' && commPct > 0)
+          ? `<div class="text-[10px] text-purple-700 font-bold">${commPct}% (${commVal.toLocaleString()})</div>`
+          : '';
+
+        return `
+          <tr class="hover:bg-slate-50 transition">
+            <td class="p-3 font-bold text-slate-500">${idx + 1}</td>
+            <td class="p-3 font-bold text-slate-800">${item.location || '—'}</td>
+            <td class="p-3">
+              <div class="font-bold">${unitText} (${item.area || '—'} m²)</div>
+              <div class="text-[11px] text-slate-500">${item.rooms || ''}</div>
+            </td>
+            <td class="p-3">
+              <div class="font-extrabold text-emerald-700">${Number(item.price || 0).toLocaleString()}</div>
+              ${commBadge}
+            </td>
+            <td class="p-3">
+              <div>${item.payment || '—'}</div>
+              <div class="text-[11px] text-slate-500">${item.finishing || ''}</div>
+            </td>
+            <td class="p-3 text-slate-600 font-semibold">${item.date || '—'}</td>
+            <td class="p-3">${phoneHtml}</td>
+            <td class="p-3 font-semibold">${item.broker || '—'}</td>
+            <td class="p-3 font-semibold text-indigo-700">${item.sales || '—'}</td>
+            <td class="p-3">
+              <span class="px-2.5 py-1 rounded-full text-[11px] font-bold ${stObj.cls}">${stText}</span>
+            </td>
+            <td class="p-3">
+              <div class="flex items-center justify-center gap-1">
+                <button type="button" onclick="openBrochureModal('${currentTab}', '${item.id}')" class="bg-purple-100 text-purple-800 px-2 py-1 rounded-lg font-bold hover:bg-purple-200" title="Brochure / PDF">📄</button>
+                <button type="button" onclick="scheduleFromRecord('${currentTab}', '${item.id}')" class="bg-amber-100 text-amber-800 px-2 py-1 rounded-lg font-bold hover:bg-amber-200" title="Schedule">📅</button>
+                <button type="button" onclick="editRecord('${item.id}')" class="bg-blue-100 text-blue-800 px-2 py-1 rounded-lg font-bold hover:bg-blue-200" title="Edit">✏️</button>
+                ${item.photoUrl ? `<a href="${item.photoUrl}" target="_blank" class="bg-sky-100 text-sky-700 px-2 py-1 rounded-lg font-bold hover:bg-sky-200" title="Photos">🖼️</a>` : ''}
+                ${item.link ? `<a href="${item.link}" target="_blank" class="bg-slate-100 text-slate-700 px-2 py-1 rounded-lg font-bold hover:bg-slate-200" title="Link">🔗</a>` : ''}
+                <button type="button" onclick="deleteRecord('${item.id}')" class="bg-rose-100 text-rose-700 px-2 py-1 rounded-lg font-bold hover:bg-rose-200" title="Delete">🗑️</button>
+              </div>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function openAddModal() {
+      document.getElementById('recordForm').reset();
+      document.getElementById('editId').value = '';
+      document.getElementById('f_date').value = new Date().toISOString().split('T')[0];
+      document.getElementById('f_commPct').value = currentTab === 'rent' ? '8.3' : (currentTab === 'sale' ? '2.5' : '0');
+      document.getElementById('modalTitle').textContent =
+        currentTab === 'sale' ? t('modalAddSale') :
+        currentTab === 'rent' ? t('modalAddRent') : t('modalAddReq');
+      document.getElementById('recordModal').classList.remove('hidden');
+    }
+
+    function editRecord(id) {
+      const item = (db[currentTab] || []).find(x => x.id === id);
+      if (!item) return;
+      document.getElementById('editId').value = item.id;
+      document.getElementById('f_location').value = item.location || '';
+      document.getElementById('f_unitType').value = item.unitType || 'شقة';
+      document.getElementById('f_area').value = item.area || '';
+      document.getElementById('f_rooms').value = item.rooms || '';
+      document.getElementById('f_price').value = item.price || '';
+      document.getElementById('f_commPct').value = item.commPct !== undefined ? item.commPct : '2.5';
+      document.getElementById('f_payment').value = item.payment || '';
+      document.getElementById('f_finishing').value = item.finishing || '';
+      document.getElementById('f_date').value = item.date || '';
+      document.getElementById('f_phone').value = item.phone || '';
+      document.getElementById('f_broker').value = item.broker || '';
+      document.getElementById('f_sales').value = item.sales || '';
+      document.getElementById('f_status').value = item.status || 'جديد';
+      document.getElementById('f_photoUrl').value = item.photoUrl || '';
+      document.getElementById('f_link').value = item.link || '';
+      document.getElementById('f_notes').value = item.notes || '';
+      document.getElementById('modalTitle').textContent = t('modalEdit');
+      document.getElementById('recordModal').classList.remove('hidden');
+    }
+
+    function closeRecordModal() {
+      document.getElementById('recordModal').classList.add('hidden');
+    }
+
+    function saveRecord(e) {
+      e.preventDefault();
+      const id = document.getElementById('editId').value || ('id_' + Date.now() + '_' + Math.random().toString(36).slice(2, 6));
+      const obj = {
+        id,
+        location: document.getElementById('f_location').value.trim(),
+        unitType: document.getElementById('f_unitType').value,
+        area: document.getElementById('f_area').value.trim(),
+        rooms: document.getElementById('f_rooms').value.trim(),
+        price: Number(document.getElementById('f_price').value) || 0,
+        commPct: Number(document.getElementById('f_commPct').value) || 0,
+        payment: document.getElementById('f_payment').value.trim(),
+        finishing: document.getElementById('f_finishing').value.trim(),
+        date: document.getElementById('f_date').value,
+        phone: document.getElementById('f_phone').value.trim(),
+        broker: document.getElementById('f_broker').value.trim(),
+        sales: document.getElementById('f_sales').value.trim(),
+        status: document.getElementById('f_status').value,
+        photoUrl: document.getElementById('f_photoUrl').value.trim(),
+        link: document.getElementById('f_link').value.trim(),
+        notes: document.getElementById('f_notes').value.trim()
+      };
+
+      const idx = db[currentTab].findIndex(x => x.id === id);
+      if (idx >= 0) db[currentTab][idx] = obj;
+      else db[currentTab].unshift(obj);
+
+      closeRecordModal();
+      saveDB();
+    }
+
+    function deleteRecord(id) {
+      if (!confirm(t('confirmDelete'))) return;
+      db[currentTab] = db[currentTab].filter(x => x.id !== id);
+      saveDB();
+    }
+
+    function clearAllData() {
+      if (!confirm(t('confirmClear'))) return;
+      db.sale = [];
+      db.rent = [];
+      db.req = [];
+      db.tasks = [];
+      saveDB();
+    }
+
+    // FIXED & ROBUST STANDALONE DOWNLOAD BUTTON
+    function downloadStandaloneHtml() {
+      try {
+        // Inject current saved state into a clean copy of the page
+        const docClone = document.documentElement.cloneNode(true);
+        const rawHtml = '<!DOCTYPE html>\n' + docClone.outerHTML;
+        const blob = new Blob([rawHtml], { type: 'text/html;charset=utf-8' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.style.display = 'none';
+        a.href = url;
+        a.download = 'CRM_System_v4.html';
+        document.body.appendChild(a);
+        a.click();
+        setTimeout(() => {
+          document.body.removeChild(a);
+          URL.revokeObjectURL(url);
+        }, 500);
+      } catch (err) {
+        alert(t('downloadFallbackMsg'));
+      }
+    }
+
+    // Brochure Modal (New #3)
+    function openBrochureModal(tab, id) {
+      const item = (db[tab] || []).find(x => x.id === id);
+      if (!item) return;
+      activeBrochureItem = { tab, item };
+      const isEn = db.lang === 'en';
+      const unitObj = unitDisplayMap[item.unitType] || { ar: item.unitType, en: item.unitType };
+      const unitText = isEn ? unitObj.en : unitObj.ar;
+
+      document.getElementById('brBadge').textContent = isEn
+        ? (tab === 'sale' ? 'FOR SALE' : tab === 'rent' ? 'FOR RENT' : 'CLIENT REQUEST')
+        : (tab === 'sale' ? 'متاح للبيع' : tab === 'rent' ? 'متاح للإيجار' : 'طلب عميل');
+
+      document.getElementById('brTitle').textContent = unitText;
+      document.getElementById('brLoc').textContent = '📍 ' + (item.location || '—');
+      document.getElementById('brPriceLabel').textContent = isEn ? 'Price / Budget' : 'السعر / الميزانية';
+      document.getElementById('brPrice').textContent = Number(item.price || 0).toLocaleString() + ' ' + t('currency');
+      document.getElementById('brArea').textContent = (item.area || '—') + ' m²';
+      document.getElementById('brRooms').textContent = item.rooms || '—';
+      document.getElementById('brFinish').textContent = item.finishing || '—';
+      document.getElementById('brPay').textContent = item.payment || '—';
+      document.getElementById('brNotes').textContent = item.notes || (isEn ? 'Prime location, ready for viewing.' : 'موقع مميز وجاهز للمعاينة.');
+      document.getElementById('brPhotoLine').textContent = item.photoUrl ? ((isEn ? '📸 Photos/Video: ' : '📸 رابط الصور/الفيديو: ') + item.photoUrl) : '';
+      document.getElementById('brContact').textContent = db.whatsapp || '01023088574';
+
+      document.getElementById('brochureModal').classList.remove('hidden');
+    }
+
+    function closeBrochureModal() {
+      document.getElementById('brochureModal').classList.add('hidden');
+    }
+
+    function sendBrochureWa() {
+      if (!activeBrochureItem) return;
+      const { tab, item } = activeBrochureItem;
+      const isEn = db.lang === 'en';
+      const wa = db.whatsapp || '01023088574';
+      const priceFmt = Number(item.price || 0).toLocaleString() + ' ' + t('currency');
+      const msg = isEn
+        ? `🏢 *${item.unitType} in ${item.location}*\n📐 Area: ${item.area || '—'} m² (${item.rooms || ''})\n✨ Finishing: ${item.finishing || '—'}\n💰 Price: ${priceFmt} (${item.payment || ''})\n${item.photoUrl ? '📸 Photos: ' + item.photoUrl + '\n' : ''}📞 Contact: ${wa}`
+        : `🏢 *${item.unitType} في ${item.location}*\n📐 المساحة: ${item.area || '—'} م² (${item.rooms || ''})\n✨ التشطيب: ${item.finishing || '—'}\n💰 السعر: ${priceFmt} (${item.payment || ''})\n${item.photoUrl ? '📸 رابط الصور: ' + item.photoUrl + '\n' : ''}📞 للتواصل والمعاينة: ${wa}`;
+      window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank');
+    }
+
+    // Commission Calculator (New #2)
+    function runCalc() {
+      const price = Number(document.getElementById('c_price').value) || 0;
+      const totalPct = Number(document.getElementById('c_totalPct').value) || 0;
+      const salesPct = Number(document.getElementById('c_salesPct').value) || 0;
+      const brokerPct = Number(document.getElementById('c_brokerPct').value) || 0;
+
+      const gross = Math.round((price * totalPct) / 100);
+      const salesShare = Math.round((gross * salesPct) / 100);
+      const brokerShare = Math.round((gross * brokerPct) / 100);
+      const net = gross - salesShare - brokerShare;
+      const cur = t('currency');
+
+      document.getElementById('c_resTotal').textContent = gross.toLocaleString() + ' ' + cur;
+      document.getElementById('c_resSales').textContent = salesShare.toLocaleString() + ' ' + cur;
+      document.getElementById('c_resBroker').textContent = brokerShare.toLocaleString() + ' ' + cur;
+      document.getElementById('c_resNet').textContent = net.toLocaleString() + ' ' + cur;
+    }
+
+    // Visual Charts (New #1)
+    function renderCharts() {
+      const allRecords = [...(db.sale || []), ...(db.rent || []), ...(db.req || [])];
+      const isEn = db.lang === 'en';
+
+      // 1. Pipeline Status Chart
+      const statuses = ['جديد', 'جاري التواصل', 'معاد معاينة', 'تفاوض', 'تم التعاقد', 'ملغي'];
+      const statusLabels = statuses.map(s => isEn ? statusDisplayMap[s].en : statusDisplayMap[s].ar);
+      const statusCounts = statuses.map(s => allRecords.filter(r => r.status === s).length);
+
+      const ctx1 = document.getElementById('statusChart').getContext('2d');
+      if (statusChartInstance) statusChartInstance.destroy();
+      statusChartInstance = new Chart(ctx1, {
+        type: 'doughnut',
+        data: {
+          labels: statusLabels,
+          datasets: [{
+            data: statusCounts,
+            backgroundColor: ['#3b82f6', '#0ea5e9', '#f59e0b', '#a855f7', '#10b981', '#f43f5e']
+          }]
+        },
+        options: { responsive: true, maintainAspectRatio: false }
+      });
+
+      // 2. Sales Performance Chart
+      const salesMap = {};
+      allRecords.forEach(r => {
+        const name = (r.sales || '').trim() || (isEn ? 'Unassigned' : 'غير محدد');
+        salesMap[name] = (salesMap[name] || 0) + 1;
+      });
+      const salesNames = Object.keys(salesMap);
+      const salesCounts = Object.values(salesMap);
+
+      const ctx2 = document.getElementById('salesChart').getContext('2d');
+      if (salesChartInstance) salesChartInstance.destroy();
+      salesChartInstance = new Chart(ctx2, {
+        type: 'bar',
+        data: {
+          labels: salesNames.length ? salesNames : [isEn ? 'No Data' : 'لا توجد بيانات'],
+          datasets: [{
+            label: isEn ? 'Records Count' : 'عدد السجلات',
+            data: salesCounts.length ? salesCounts : [0],
+            backgroundColor: '#0f172a',
+            borderRadius: 8
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } }
+        }
+      });
+    }
+
+    // Smart Matching
+    function computeMatches() {
+      const results = [];
+      (db.req || []).forEach(req => {
+        const isRent = String(req.payment || req.notes || '').toLowerCase().includes('إيجار') ||
+                       String(req.payment || req.notes || '').toLowerCase().includes('rent') ||
+                       (req.price > 0 && req.price < 300000);
+        const pool = isRent ? db.rent : db.sale;
+        pool.forEach(offer => {
+          let score = 0;
+          const locA = String(req.location || '').toLowerCase();
+          const locB = String(offer.location || '').toLowerCase();
+          if (locA && locB && (locA.includes(locB) || locB.includes(locA))) score += 45;
+          if (req.unitType === offer.unitType) score += 20;
+          if (req.price > 0 && offer.price > 0) {
+            const diffRatio = (req.price - offer.price) / req.price;
+            if (diffRatio >= -0.15) score += 35;
+          }
+          if (score >= 55) {
+            results.push({ req, offer, score: Math.min(score, 100), isRent });
+          }
+        });
+      });
+      return results.sort((a, b) => b.score - a.score);
+    }
+
+    function renderMatches() {
+      const container = document.getElementById('matchesContainer');
+      const matches = computeMatches();
+      if (matches.length === 0) {
+        container.innerHTML = `<div class="text-center py-10 bg-slate-50 rounded-2xl border border-dashed border-slate-300 text-xs text-slate-500">
+          ${t('matchEmpty')}
+        </div>`;
+        return;
+      }
+      const isEn = db.lang === 'en';
+      container.innerHTML = matches.map(m => {
+        const waClient = formatWaNumber(m.req.phone);
+        const typeLabel = isEn ? (m.isRent ? 'Rent' : 'Sale') : (m.isRent ? 'إيجار' : 'بيع');
+        const msgText = isEn
+          ? `Hello, regarding your request (${m.req.unitType} in ${m.req.location}), we have a matching property: ${m.offer.unitType} (${m.offer.area} m²) priced at ${Number(m.offer.price).toLocaleString()} EGP. Contact us: ${db.whatsapp}`
+          : `أهلاً بك، بخصوص طلبك (${m.req.unitType} في ${m.req.location})، متاح لدينا عرض مطابق: ${m.offer.unitType} مساحة ${m.offer.area}م² بسعر ${Number(m.offer.price).toLocaleString()} ج.م. للتفاصيل والمعاينة: ${db.whatsapp}`;
+        return `
+          <div class="p-4 rounded-2xl border border-slate-200 bg-slate-50 flex flex-wrap items-center justify-between gap-3 text-xs">
+            <div class="space-y-1">
+              <span class="bg-purple-100 text-purple-800 px-2.5 py-0.5 rounded-full font-extrabold">${isEn ? `Match ${m.score}% (${typeLabel})` : `تطابق ${m.score}% (${typeLabel})`}</span>
+              <p class="font-bold text-slate-800">${isEn ? 'Request' : 'الطلب'}: ${m.req.unitType} — ${m.req.location} (${Number(m.req.price).toLocaleString()} ${t('currency')})</p>
+              <p class="text-slate-600">${isEn ? 'Matching Offer' : 'العرض المطابق'}: ${m.offer.unitType} (${m.offer.area} m²) — ${m.offer.location} — ${Number(m.offer.price).toLocaleString()} ${t('currency')}</p>
+            </div>
+            <div class="flex gap-2">
+              ${waClient ? `<a href="https://wa.me/${waClient}?text=${encodeURIComponent(msgText)}" target="_blank" class="bg-emerald-600 text-white px-3 py-2 rounded-xl font-bold hover:bg-emerald-700">💬 ${isEn ? 'Send via WhatsApp' : 'إرسال للعميل واتساب'}</a>` : ''}
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // Tasks & Google Calendar
+    function openTaskModal(prefill = {}) {
+      document.getElementById('t_title').value = prefill.title || '';
+      document.getElementById('t_date').value = prefill.date || new Date().toISOString().split('T')[0];
+      document.getElementById('t_time').value = prefill.time || '14:00';
+      document.getElementById('t_phone').value = prefill.phone || '';
+      document.getElementById('t_sales').value = prefill.sales || '';
+      document.getElementById('t_notes').value = prefill.notes || '';
+      document.getElementById('taskModal').classList.remove('hidden');
+    }
+
+    function closeTaskModal() {
+      document.getElementById('taskModal').classList.add('hidden');
+    }
+
+    function scheduleFromRecord(tab, id) {
+      const item = (db[tab] || []).find(x => x.id === id);
+      if (!item) return;
+      const isEn = db.lang === 'en';
+      openTaskModal({
+        title: `${isEn ? 'Follow-up / Viewing' : 'متابعة / معاينة'}: ${item.unitType} - ${item.location}`,
+        phone: item.phone || '',
+        sales: item.sales || '',
+        notes: `${isEn ? 'Client/Broker' : 'العميل/البروكر'}: ${item.broker || '—'} | ${Number(item.price || 0).toLocaleString()} ${t('currency')}`
+      });
+    }
+
+    function saveTask(e) {
+      e.preventDefault();
+      db.tasks.unshift({
+        id: 'task_' + Date.now(),
+        title: document.getElementById('t_title').value.trim(),
+        date: document.getElementById('t_date').value,
+        time: document.getElementById('t_time').value,
+        phone: document.getElementById('t_phone').value.trim(),
+        sales: document.getElementById('t_sales').value.trim(),
+        notes: document.getElementById('t_notes').value.trim(),
+        done: false
+      });
+      closeTaskModal();
+      saveDB();
+    }
+
+    function toggleTaskDone(id) {
+      const tk = db.tasks.find(x => x.id === id);
+      if (tk) { tk.done = !tk.done; saveDB(); }
+    }
+
+    function deleteTask(id) {
+      db.tasks = db.tasks.filter(x => x.id !== id);
+      saveDB();
+    }
+
+    function getGoogleCalendarLink(task) {
+      const d = (task.date || '').replace(/-/g, '');
+      const tm = (task.time || '12:00').replace(':', '') + '00';
+      const start = `${d}T${tm}`;
+      const details = encodeURIComponent(`Phone: ${task.phone || '—'}\nSales: ${task.sales || '—'}\n${task.notes || ''}`);
+      return `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(task.title)}&dates=${start}/${start}&details=${details}`;
+    }
+
+    function renderTasks() {
+      const container = document.getElementById('tasksContainer');
+      if (!db.tasks || db.tasks.length === 0) {
+        container.innerHTML = `<div class="col-span-2 text-center py-10 bg-slate-50 rounded-2xl border border-dashed border-slate-300 text-xs text-slate-500">
+          ${t('tasksEmpty')}
+        </div>`;
+        return;
+      }
+      const today = new Date().toISOString().split('T')[0];
+      container.innerHTML = db.tasks.map(tk => {
+        const isOverdue = !tk.done && tk.date < today;
+        const isToday = !tk.done && tk.date === today;
+        const borderClass = tk.done ? 'border-slate-200 opacity-60' : isOverdue ? 'border-rose-400 bg-rose-50/40' : isToday ? 'border-amber-400 bg-amber-50/40' : 'border-slate-200';
+        return `
+          <div class="p-4 rounded-2xl border ${borderClass} space-y-2 text-xs">
+            <div class="flex items-start justify-between gap-2">
+              <div class="flex items-center gap-2">
+                <input type="checkbox" ${tk.done ? 'checked' : ''} onchange="toggleTaskDone('${tk.id}')" class="w-4 h-4 accent-emerald-600" />
+                <span class="font-extrabold text-sm ${tk.done ? 'line-through text-slate-400' : 'text-slate-800'}">${tk.title}</span>
+              </div>
+              <span class="px-2 py-0.5 rounded-full text-[11px] font-bold ${isOverdue ? 'bg-rose-100 text-rose-700' : isToday ? 'bg-amber-100 text-amber-800' : 'bg-slate-100 text-slate-700'}">
+                ${tk.date} • ${tk.time}
+              </span>
+            </div>
+            <p class="text-slate-600">${tk.notes || '—'}</p>
+            <div class="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-slate-200">
+              <span class="text-slate-500 font-semibold">📞 ${tk.phone || '—'} | 👤 ${tk.sales || '—'}</span>
+              <div class="flex gap-1.5">
+                <a href="${getGoogleCalendarLink(tk)}" target="_blank" class="bg-blue-100 text-blue-800 px-2.5 py-1 rounded-lg font-bold hover:bg-blue-200">📆 Google Calendar</a>
+                <button type="button" onclick="deleteTask('${tk.id}')" class="bg-rose-100 text-rose-700 px-2 py-1 rounded-lg font-bold hover:bg-rose-200">🗑️</button>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // Ads Generator
+    function populateAdItems() {
+      const src = document.getElementById('adSourceType').value;
+      const sel = document.getElementById('adItemSelect');
+      const items = db[src] || [];
+      if (items.length === 0) {
+        sel.innerHTML = `<option value="">${t('adNoItems')}</option>`;
+        document.getElementById('generatedAdBox').value = '';
+        return;
+      }
+      sel.innerHTML = items.map((it, i) => `<option value="${it.id}">#${i + 1} - ${it.unitType} - ${it.location} (${Number(it.price || 0).toLocaleString()} ${t('currency')})</option>`).join('');
+      generateAdText();
+    }
+
+    function generateAdText() {
+      const src = document.getElementById('adSourceType').value;
+      const id = document.getElementById('adItemSelect').value;
+      const tpl = document.getElementById('adTemplateType').value;
+      const item = (db[src] || []).find(x => x.id === id);
+      if (!item) return;
+
+      const isEn = db.lang === 'en';
+      const wa = db.whatsapp || '01023088574';
+      const priceFmt = Number(item.price || 0).toLocaleString() + ' ' + t('currency');
+      let text = '';
+
+      if (isEn) {
+        if (tpl === 'fb') {
+          if (src === 'req') {
+            text = `🎯 URGENT CLIENT REQUEST 🎯\n\n` +
+              `📍 Location: ${item.location}\n` +
+              `🏠 Unit Type: ${item.unitType} (${item.rooms || ''})\n` +
+              `📐 Area Needed: ${item.area || 'Flexible'} m²\n` +
+              `💰 Budget: Around ${priceFmt} (${item.payment || ''})\n` +
+              `✨ Specs: ${item.finishing || 'Good finishing'} ${item.notes ? '- ' + item.notes : ''}\n\n` +
+              `📲 To send matching offers via WhatsApp / Call:\n${wa}`;
+          } else {
+            const badge = src === 'sale' ? '🔥 HOT PROPERTY FOR SALE 🔥' : '🔑 AVAILABLE FOR RENT NOW 🔑';
+            text = `${badge}\n\n` +
+              `📍 Location: ${item.location}\n` +
+              `🏠 Unit Type: ${item.unitType}\n` +
+              `📐 Area: ${item.area || '—'} m² (${item.rooms || ''})\n` +
+              `✨ Finishing: ${item.finishing || '—'}\n` +
+              `💳 Payment / Terms: ${item.payment || '—'}\n` +
+              `💰 Price: ${priceFmt}\n` +
+              `${item.photoUrl ? '📸 Photos Link: ' + item.photoUrl + '\n' : ''}` +
+              `${item.notes ? '📝 Highlights: ' + item.notes + '\n' : ''}\n` +
+              `📲 For inquiries & viewing appointments (WhatsApp / Call):\n${wa}`;
+          }
+        } else if (tpl === 'wa_client') {
+          text = `Hello! 🌹\n` +
+            `Regarding your real estate inquiry, we recommend this property in *${item.location}*:\n` +
+            `• Unit: ${item.unitType}, ${item.area || '—'} m² (${item.rooms || ''})\n` +
+            `• Finishing: ${item.finishing || '—'}\n` +
+            `• Price: ${priceFmt} (${item.payment || ''})\n` +
+            `${item.photoUrl ? '• Photos: ' + item.photoUrl + '\n' : ''}` +
+            `${item.notes ? '• Notes: ' + item.notes + '\n' : ''}` +
+            `When would you like to schedule a viewing?\nDirect contact: ${wa}`;
+        } else {
+          text = `Hello ${item.broker || ''},\n` +
+            `Following up on your listed property in *${item.location}* (${item.unitType} - ${item.area || '—'} m² - ${priceFmt}).\n` +
+            `Is it still available for a viewing with a serious client?\nContact: ${wa}`;
+        }
+      } else {
+        if (tpl === 'fb') {
+          if (src === 'req') {
+            text = `🎯 مطلوب بشكل عاجل لعميل جاد 🎯\n\n` +
+              `📍 المنطقة: ${item.location}\n` +
+              `🏠 النوع: ${item.unitType} (${item.rooms || ''})\n` +
+              `📐 المساحة المطلوبة: ${item.area || 'مناسبة'} م²\n` +
+              `💰 الميزانية: في حدود ${priceFmt} (${item.payment || ''})\n` +
+              `✨ المواصفات: ${item.finishing || 'تشطيب جيد'} ${item.notes ? '- ' + item.notes : ''}\n\n` +
+              `📲 للتواصل وإرسال العروض المناسبة واتساب / اتصال:\n${wa}`;
+          } else {
+            const badge = src === 'sale' ? '🔥 فرصة مميزة للبيع 🔥' : '🔑 متاح للإيجار فوراً 🔑';
+            text = `${badge}\n\n` +
+              `📍 الموقع: ${item.location}\n` +
+              `🏠 نوع الوحدة: ${item.unitType}\n` +
+              `📐 المساحة: ${item.area || '—'} م² (${item.rooms || ''})\n` +
+              `✨ التشطيب: ${item.finishing || '—'}\n` +
+              `💳 السداد / النظام: ${item.payment || '—'}\n` +
+              `💰 السعر: ${priceFmt}\n` +
+              `${item.photoUrl ? '📸 رابط الصور: ' + item.photoUrl + '\n' : ''}` +
+              `${item.notes ? '📝 مميزات إضافية: ' + item.notes + '\n' : ''}\n` +
+              `📲 للاستفسار وتحديد ميعاد معاينة (واتساب / اتصال):\n${wa}`;
+          }
+        } else if (tpl === 'wa_client') {
+          text = `أهلاً بحضرتك يا فندم 🌹\n` +
+            `بخصوص استفسارك العقاري، رشحنا لحضرتك العرض ده في *${item.location}*:\n` +
+            `• الوحدة: ${item.unitType} مساحة ${item.area || '—'} م² (${item.rooms || ''})\n` +
+            `• التشطيب: ${item.finishing || '—'}\n` +
+            `• السعر: ${priceFmt} (${item.payment || ''})\n` +
+            `${item.photoUrl ? '• رابط الصور: ' + item.photoUrl + '\n' : ''}` +
+            `${item.notes ? '• ملاحظات: ' + item.notes + '\n' : ''}` +
+            `تحب نحدد ميعاد للمعاينة امتى؟\nللتواصل المباشر: ${wa}`;
+        } else {
+          text = `أهلاً أ/ ${item.broker || 'الفاضل'}، مع حضرتك فريق التسويق العقاري.\n` +
+            `بنتابع بخصوص الوحدة المعروضة في *${item.location}* (${item.unitType} - ${item.area || '—'} م² - بسعر ${priceFmt}).\n` +
+            `هل الوحدة ما زالت متاحة للمعاينة مع عميل جاد؟\nللتواصل: ${wa}`;
+        }
+      }
+      document.getElementById('generatedAdBox').value = text;
+    }
+
+    function copyAdText() {
+      const box = document.getElementById('generatedAdBox');
+      box.select();
+      document.execCommand('copy');
+      alert(t('alertCopied'));
+    }
+
+    function sendAdViaWhatsapp() {
+      const text = encodeURIComponent(document.getElementById('generatedAdBox').value);
+      const src = document.getElementById('adSourceType').value;
+      const id = document.getElementById('adItemSelect').value;
+      const item = (db[src] || []).find(x => x.id === id);
+      const targetPhone = (item && item.phone) ? formatWaNumber(item.phone) : formatWaNumber(db.whatsapp);
+      window.open(`https://wa.me/${targetPhone}?text=${text}`, '_blank');
+    }
+
+    // Excel Import & Export
+    function handleImport(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(evt) {
+        const workbook = XLSX.read(evt.target.result, { type: 'binary' });
+        let importedCount = 0;
+        workbook.SheetNames.forEach(sheetName => {
+          const rows = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName], { defval: '' });
+          let target = 'sale';
+          if (sheetName.includes('إيجار') || sheetName.toLowerCase().includes('rent')) target = 'rent';
+          else if (sheetName.includes('مطلوب') || sheetName.includes('طلب') || sheetName.toLowerCase().includes('req')) target = 'req';
+
+          rows.forEach(r => {
+            const loc = r['المدينة / المنطقة'] || r['City / Area'] || r['المرحلة / المنطقة'] || '';
+            const priceRaw = r['السعر (ج.م)'] || r['Price (EGP)'] || r['السعر الإجمالي (ج.م)'] || r['قيمة الإيجار (ج.م)'] || r['الميزانية (ج.م)'] || r['Budget (EGP)'] || 0;
+            const price = Number(String(priceRaw).replace(/[^\d.]/g, '')) || 0;
+            if (!loc && !price) return;
+
+            db[target].push({
+              id: 'imp_' + Date.now() + '_' + Math.random().toString(36).slice(2, 6),
+              location: String(loc),
+              unitType: String(r['نوع الوحدة'] || r['Unit Type'] || 'شقة'),
+              area: String(r['المساحة (م²)'] || r['Area (m²)'] || ''),
+              rooms: String(r['الغرف والحمامات'] || r['Rooms'] || ''),
+              price,
+              commPct: Number(r['نسبة العمولة (%)'] || r['Commission (%)'] || (target === 'sale' ? 2.5 : target === 'rent' ? 8.3 : 0)),
+              payment: String(r['نظام السداد / الإيجار'] || r['Payment Plan'] || ''),
+              finishing: String(r['التشطيب والفرش'] || r['Finishing'] || ''),
+              date: String(r['تاريخ نزول الإعلان'] || r['تاريخ نزول الطلب'] || r['Date'] || new Date().toISOString().split('T')[0]),
+              phone: String(r['رقم التليفون'] || r['Phone'] || ''),
+              broker: String(r['اسم البروكر'] || r['Broker / Client'] || ''),
+              sales: String(r['اسم السيلز'] || r['Sales Agent'] || ''),
+              status: 'جديد',
+              photoUrl: String(r['رابط الصور'] || r['Photos Link'] || ''),
+              link: '',
+              notes: String(r['ملاحظات'] || r['Notes'] || '')
+            });
+            importedCount++;
+          });
+        });
+        saveDB();
+        alert(i18n[db.lang].alertImported(importedCount));
+      };
+      reader.readAsBinaryString(file);
+      e.target.value = '';
+    }
+
+    function exportToExcel() {
+      const wb = XLSX.utils.book_new();
+      const mapSheet = (arr, isReq = false) => arr.map((x, i) => ({
+        '#': i + 1,
+        'المدينة / المنطقة': x.location,
+        'نوع الوحدة': x.unitType,
+        'المساحة (م²)': x.area,
+        'الغرف والحمامات': x.rooms,
+        [isReq ? 'الميزانية (ج.م)' : 'السعر (ج.م)']: x.price,
+        'نسبة العمولة (%)': x.commPct || 0,
+        'نظام السداد / الإيجار': x.payment,
+        'التشطيب والفرش': x.finishing,
+        [isReq ? 'تاريخ نزول الطلب' : 'تاريخ نزول الإعلان']: x.date,
+        'رقم التليفون': x.phone,
+        'اسم البروكر': x.broker,
+        'اسم السيلز': x.sales,
+        'حالة المتابعة': x.status,
+        'رابط الصور': x.photoUrl || '',
+        'ملاحظات': x.notes
+      }));
+      XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(mapSheet(db.sale)), 'المتاح للبيع');
+      XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(mapSheet(db.rent)), 'المتاح للإيجار');
+      XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(mapSheet(db.req, true)), 'المطلوب');
+      XLSX.writeFile(wb, 'CRM_System_Data.xlsx');
+    }
+
+    function downloadBackup() {
+      const blob = new Blob([JSON.stringify(db, null, 2)], { type: 'application/json' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = `CRM_Backup_${new Date().toISOString().split('T')[0]}.json`;
+      a.click();
+    }
+
+    function restoreBackup(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = evt => {
+        try {
+          db = { ...db, ...JSON.parse(evt.target.result) };
+          applyLanguage();
+          alert(t('alertRestored'));
+        } catch { alert(t('alertInvalidFile')); }
+      };
+      reader.readAsText(file);
+    }
+
+    function updateAllViews() {
+      const saleArr = db.sale || [];
+      const rentArr = db.rent || [];
+      const reqArr = db.req || [];
+      const matchesArr = computeMatches();
+
+      document.getElementById('kpiSale').textContent = saleArr.length;
+      document.getElementById('kpiRent').textContent = rentArr.length;
+      document.getElementById('kpiReq').textContent = reqArr.length;
+
+      document.getElementById('badge-sale').textContent = saleArr.length;
+      document.getElementById('badge-rent').textContent = rentArr.length;
+      document.getElementById('badge-req').textContent = reqArr.length;
+      document.getElementById('badge-match').textContent = matchesArr.length;
+
+      const saleAvg = saleArr.length ? Math.round(saleArr.reduce((s, x) => s + (Number(x.price) || 0), 0) / saleArr.length) : 0;
+      const rentAvg = rentArr.length ? Math.round(rentArr.reduce((s, x) => s + (Number(x.price) || 0), 0) / rentArr.length) : 0;
+      const activeReqs = reqArr.filter(x => x.status !== 'تم التعاقد' && x.status !== 'ملغي').length;
+
+      document.getElementById('kpiSaleAvg').textContent = `${t('avgPrefix')} ${saleAvg.toLocaleString()} ${t('currency')}`;
+      document.getElementById('kpiRentAvg').textContent = `${t('avgPrefix')} ${rentAvg.toLocaleString()} ${t('currency')}`;
+      document.getElementById('kpiReqActive').textContent = i18n[db.lang].activeReq(activeReqs);
+
+      // Expected Commissions KPI
+      const offers = [...saleArr, ...rentArr];
+      const totalComm = offers.reduce((sum, x) => sum + Math.round(((Number(x.price) || 0) * (Number(x.commPct) || 0)) / 100), 0);
+      const closedCount = [...offers, ...reqArr].filter(x => x.status === 'تم التعاقد').length;
+      document.getElementById('kpiComm').textContent = totalComm.toLocaleString() + ' ' + t('currency');
+      document.getElementById('kpiCommClosed').textContent = i18n[db.lang].closedDealsSub(closedCount);
+
+      const today = new Date().toISOString().split('T')[0];
+      const activeTasks = (db.tasks || []).filter(tk => !tk.done);
+      const dueTasks = activeTasks.filter(tk => tk.date <= today);
+      document.getElementById('badge-tasks').textContent = activeTasks.length;
+
+      const banner = document.getElementById('reminderBanner');
+      if (dueTasks.length > 0) {
+        banner.classList.remove('hidden');
+        document.getElementById('reminderBannerText').textContent = i18n[db.lang].dueBannerText(dueTasks.length);
+      } else {
+        banner.classList.add('hidden');
+      }
+
+      renderCurrentTable();
+      if (currentTab === 'match') renderMatches();
+      if (currentTab === 'tasks') renderTasks();
+      if (currentTab === 'reports') renderCharts();
+      if (currentTab === 'ads') populateAdItems();
+    }
+
+    loadDB();
+  </script>
+
+
+</body></html>
