@@ -25,6 +25,9 @@
       --crm-text: #1A2421;
       --crm-muted: #5C6B66;
     }
+    html {
+      scroll-behavior: smooth;
+    }
     body {
       font-family: 'Cairo', 'Inter', sans-serif;
       background-color: #F6F6F4;
@@ -35,18 +38,18 @@
     }
     .no-scrollbar::-webkit-scrollbar { display: none; }
     .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-    .tab-pill-active {
+    .drawer-item-active {
       background-color: #0D4735;
       color: #FFFFFF;
       border: 1px solid #D4AC6E;
       box-shadow: 0 4px 12px rgba(13, 71, 53, 0.22);
     }
-    .tab-pill-inactive {
-      background-color: #FFFFFF;
+    .drawer-item-inactive {
+      background-color: #F6F6F4;
       color: #1A2421;
       border: 1px solid #DCE2DF;
     }
-    .tab-pill-inactive:hover {
+    .drawer-item-inactive:hover {
       border-color: #D4AC6E;
       background-color: #FCFBF7;
     }
@@ -120,18 +123,79 @@
 </head>
 <body class="min-h-screen pb-10">
 
+  <div id="sidebarOverlay" onclick="closeNavDrawer()" class="hidden fixed inset-0 bg-[#1A2421]/60 backdrop-blur-xs z-40 transition-opacity"></div>
+
+  <aside id="sideDrawer" class="fixed top-0 bottom-0 start-0 w-72 max-w-[85vw] bg-white z-50 shadow-2xl border-e border-[#DCE2DF] transform -translate-x-full rtl:translate-x-full transition-transform duration-200 flex flex-col justify-between p-4">
+    <div class="space-y-4 overflow-y-auto no-scrollbar">
+      <div class="flex items-center justify-between border-b border-[#DCE2DF] pb-3">
+        <div class="flex items-center gap-2.5">
+          <img src="Logo.jpg" alt="CRM Logo" class="w-9 h-9 rounded-xl object-cover border border-[#D4AC6E]">
+          <div>
+            <p class="text-sm font-black text-[#0D4735]">CRM System</p>
+            <p data-i18n="drawerSubtitle" class="text-[11px] text-[#5C6B66] font-semibold">قائمة الأقسام</p>
+          </div>
+        </div>
+        <button type="button" onclick="closeNavDrawer()" class="w-8 h-8 rounded-xl bg-[#F6F6F4] hover:bg-[#ECEEEB] text-[#1A2421] font-bold text-sm flex items-center justify-center cursor-pointer">✕</button>
+      </div>
+
+      <nav class="space-y-2">
+        <button type="button" onclick="selectDrawerTab('dashboard')" id="tab-dashboard" class="drawer-item-inactive w-full px-3.5 py-3 rounded-2xl text-xs font-extrabold transition flex items-center justify-between cursor-pointer">
+          <span data-i18n="tabDashboard">📊 لوحة المؤشرات</span>
+        </button>
+        <button type="button" onclick="selectDrawerTab('sale')" id="tab-sale" class="drawer-item-active w-full px-3.5 py-3 rounded-2xl text-xs font-extrabold transition flex items-center justify-between cursor-pointer">
+          <span data-i18n="tabSale">🏢 المتاح للبيع</span>
+          <span id="badge-sale" class="bg-[#D4AC6E]/25 text-[#FBF5EB] px-2 py-0.5 rounded-full text-[11px]">0</span>
+        </button>
+        <button type="button" onclick="selectDrawerTab('rent')" id="tab-rent" class="drawer-item-inactive w-full px-3.5 py-3 rounded-2xl text-xs font-extrabold transition flex items-center justify-between cursor-pointer">
+          <span data-i18n="tabRent">🔑 المتاح للإيجار</span>
+          <span id="badge-rent" class="bg-[#E6F4EF] text-[#0D4735] px-2 py-0.5 rounded-full text-[11px]">0</span>
+        </button>
+        <button type="button" onclick="selectDrawerTab('req')" id="tab-req" class="drawer-item-inactive w-full px-3.5 py-3 rounded-2xl text-xs font-extrabold transition flex items-center justify-between cursor-pointer">
+          <span data-i18n="tabReq">👥 المطلوب (طلبات العملاء)</span>
+          <span id="badge-req" class="bg-[#E6F4EF] text-[#0D4735] px-2 py-0.5 rounded-full text-[11px]">0</span>
+        </button>
+        <button type="button" onclick="selectDrawerTab('match')" id="tab-match" class="drawer-item-inactive w-full px-3.5 py-3 rounded-2xl text-xs font-extrabold transition flex items-center justify-between cursor-pointer">
+          <span data-i18n="tabMatch">⚡ المطابقة الذكية</span>
+          <span id="badge-match" class="bg-[#FBF5EB] text-[#8F672B] border border-[#D4AC6E]/40 px-2 py-0.5 rounded-full text-[11px]">0</span>
+        </button>
+        <button type="button" onclick="selectDrawerTab('tasks')" id="tab-tasks" class="drawer-item-inactive w-full px-3.5 py-3 rounded-2xl text-xs font-extrabold transition flex items-center justify-between cursor-pointer">
+          <span data-i18n="tabTasks">📅 المواعيد والتذكيرات</span>
+          <span id="badge-tasks" class="bg-[#FBF5EB] text-[#8F672B] border border-[#D4AC6E]/40 px-2 py-0.5 rounded-full text-[11px]">0</span>
+        </button>
+        <button type="button" onclick="selectDrawerTab('reports')" id="tab-reports" class="drawer-item-inactive w-full px-3.5 py-3 rounded-2xl text-xs font-extrabold transition flex items-center justify-between cursor-pointer">
+          <span data-i18n="tabReports">📈 التقارير والعمولات</span>
+        </button>
+        <button type="button" onclick="selectDrawerTab('ads')" id="tab-ads" class="drawer-item-inactive w-full px-3.5 py-3 rounded-2xl text-xs font-extrabold transition flex items-center justify-between cursor-pointer">
+          <span data-i18n="tabAds">📣 مولّد الإعلانات والرسائل</span>
+        </button>
+      </nav>
+    </div>
+
+    <div class="pt-3 border-t border-[#DCE2DF] text-[11px] text-[#5C6B66] flex items-center justify-between">
+      <span id="drawerActiveLabel" class="font-bold text-[#0D4735]">🏢 المتاح للبيع</span>
+      <button type="button" onclick="closeNavDrawer()" data-i18n="btnClose" class="font-bold text-[#5C6B66] hover:text-[#1A2421] cursor-pointer">إغلاق</button>
+    </div>
+  </aside>
+
   <div class="max-w-6xl mx-auto px-3 pt-3 md:pt-5 space-y-4">
 
     <header class="bg-[#0D4735] text-white rounded-3xl p-4 md:p-6 shadow-xl border border-[#D4AC6E]/40 space-y-4">
       <div class="flex flex-wrap items-center justify-between gap-3">
         <div class="flex items-center gap-3">
-          <div class="w-12 h-12 rounded-2xl bg-[#093527] border border-[#D4AC6E]/60 flex items-center justify-center overflow-hidden shrink-0 shadow">
+          <button type="button" onclick="openNavDrawer()" id="btnOpenDrawer" aria-label="Open menu" class="w-11 h-11 rounded-2xl bg-[#093527] hover:bg-[#06261C] border border-[#D4AC6E]/60 text-[#D4AC6E] flex items-center justify-center shrink-0 shadow cursor-pointer transition">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2.3" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"></path>
+            </svg>
+          </button>
+
+          <div class="w-11 h-11 rounded-2xl bg-[#093527] border border-[#D4AC6E]/60 flex items-center justify-center overflow-hidden shrink-0 shadow">
             <img id="appBrandIcon" src="Logo.jpg" alt="CRM System Logo" class="w-full h-full object-cover">
           </div>
+
           <div>
             <div class="flex flex-wrap items-center gap-2">
               <h1 class="text-xl md:text-2xl font-black tracking-tight text-white">CRM System</h1>
-              <span data-i18n="badgeTitle" class="bg-[#D4AC6E]/20 text-[#D4AC6E] border border-[#D4AC6E]/40 text-[11px] font-bold px-2.5 py-0.5 rounded-full">نظام إدارة العقارات والعملاء</span>
+              <span data-i18n="badgeTitle" class="inline-block whitespace-nowrap leading-snug bg-[#D4AC6E]/20 text-[#D4AC6E] border border-[#D4AC6E]/40 text-[11px] font-bold px-2.5 py-0.5 rounded-full">النسخة الكاملة (Full)</span>
             </div>
             <p data-i18n="headerSub" class="text-xs text-[#DCE8E3] mt-1">إدارة شاملة للمعروض والمطلوب، المواعيد، المطابقة الذكية، العمولات، والتسويق</p>
           </div>
@@ -155,7 +219,13 @@
         </div>
       </div>
 
-      <div class="flex flex-wrap items-center gap-2.5 pt-1">
+      <div class="flex flex-wrap items-center gap-2 pt-1">
+        <button type="button" onclick="openNavDrawer()" id="btnSectionsBar" class="bg-[#07291E] hover:bg-[#06261C] border border-[#D4AC6E]/60 text-[#D4AC6E] font-extrabold text-xs px-3.5 py-2.5 rounded-xl shadow transition flex items-center gap-1.5 cursor-pointer">
+          <span>☰</span>
+          <span data-i18n="btnSectionsMenu">الأقسام</span>
+          <span id="currentSectionPill" class="bg-[#D4AC6E] text-[#0D4735] px-2 py-0.5 rounded-lg text-[10px] font-black">المتاح للبيع</span>
+        </button>
+
         <button type="button" onclick="handleInstallAction()" id="btnInstallApp" class="flex-1 sm:flex-none bg-[#D4AC6E] hover:bg-[#C29653] text-[#0D4735] font-extrabold text-xs px-4 py-2.5 rounded-xl shadow transition flex items-center justify-center gap-1.5 cursor-pointer">
           <span data-i18n="btnInstallApp">📲 تثبيت كبرنامج (Install)</span>
         </button>
@@ -193,91 +263,59 @@
         <span data-i18n="reminderPrefix">🔔 تنبيه المواعيد:</span>
         <span id="reminderBannerText"></span>
       </div>
-      <button type="button" onclick="switchTab('tasks')" data-i18n="btnViewReminders" class="bg-[#0D4735] text-[#D4AC6E] border border-[#D4AC6E]/50 px-3 py-1.5 rounded-xl font-bold hover:bg-[#093527] cursor-pointer">عرض المواعيد</button>
+      <button type="button" onclick="switchTab('tasks', true)" data-i18n="btnViewReminders" class="bg-[#0D4735] text-[#D4AC6E] border border-[#D4AC6E]/50 px-3 py-1.5 rounded-xl font-bold hover:bg-[#093527] cursor-pointer">عرض المواعيد</button>
     </div>
 
-    <nav class="flex items-center gap-2 overflow-x-auto no-scrollbar py-1">
-      <button type="button" onclick="switchTab('dashboard')" id="tab-dashboard" class="tab-pill-inactive shrink-0 px-4 py-2.5 rounded-2xl text-xs font-extrabold transition flex items-center gap-2 cursor-pointer">
-        <span data-i18n="tabDashboard">📊 لوحة المؤشرات</span>
-      </button>
-      <button type="button" onclick="switchTab('sale')" id="tab-sale" class="tab-pill-active shrink-0 px-4 py-2.5 rounded-2xl text-xs font-extrabold transition flex items-center gap-2 cursor-pointer">
-        <span data-i18n="tabSale">🏢 المتاح للبيع</span>
-        <span id="badge-sale" class="bg-[#D4AC6E]/25 text-[#FBF5EB] px-2 py-0.5 rounded-full text-[11px]">0</span>
-      </button>
-      <button type="button" onclick="switchTab('rent')" id="tab-rent" class="tab-pill-inactive shrink-0 px-4 py-2.5 rounded-2xl text-xs font-extrabold transition flex items-center gap-2 cursor-pointer">
-        <span data-i18n="tabRent">🔑 المتاح للإيجار</span>
-        <span id="badge-rent" class="bg-[#E6F4EF] text-[#0D4735] px-2 py-0.5 rounded-full text-[11px]">0</span>
-      </button>
-      <button type="button" onclick="switchTab('req')" id="tab-req" class="tab-pill-inactive shrink-0 px-4 py-2.5 rounded-2xl text-xs font-extrabold transition flex items-center gap-2 cursor-pointer">
-        <span data-i18n="tabReq">👥 المطلوب (طلبات العملاء)</span>
-        <span id="badge-req" class="bg-[#E6F4EF] text-[#0D4735] px-2 py-0.5 rounded-full text-[11px]">0</span>
-      </button>
-      <button type="button" onclick="switchTab('match')" id="tab-match" class="tab-pill-inactive shrink-0 px-4 py-2.5 rounded-2xl text-xs font-extrabold transition flex items-center gap-2 cursor-pointer">
-        <span data-i18n="tabMatch">⚡ المطابقة الذكية</span>
-        <span id="badge-match" class="bg-[#FBF5EB] text-[#8F672B] border border-[#D4AC6E]/40 px-2 py-0.5 rounded-full text-[11px]">0</span>
-      </button>
-      <button type="button" onclick="switchTab('tasks')" id="tab-tasks" class="tab-pill-inactive shrink-0 px-4 py-2.5 rounded-2xl text-xs font-extrabold transition flex items-center gap-2 cursor-pointer">
-        <span data-i18n="tabTasks">📅 المواعيد والتذكيرات</span>
-        <span id="badge-tasks" class="bg-[#FBF5EB] text-[#8F672B] border border-[#D4AC6E]/40 px-2 py-0.5 rounded-full text-[11px]">0</span>
-      </button>
-      <button type="button" onclick="switchTab('reports')" id="tab-reports" class="tab-pill-inactive shrink-0 px-4 py-2.5 rounded-2xl text-xs font-extrabold transition flex items-center gap-2 cursor-pointer">
-        <span data-i18n="tabReports">📈 التقارير والعمولات</span>
-      </button>
-      <button type="button" onclick="switchTab('ads')" id="tab-ads" class="tab-pill-inactive shrink-0 px-4 py-2.5 rounded-2xl text-xs font-extrabold transition flex items-center gap-2 cursor-pointer">
-        <span data-i18n="tabAds">📣 مولّد الإعلانات والرسائل</span>
-      </button>
-    </nav>
-
-    <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-      <div onclick="switchTab('sale')" class="cursor-pointer bg-white rounded-2xl p-4 border border-[#DCE2DF] border-t-4 border-t-[#0D4735] shadow-xs hover:shadow-md transition flex items-center justify-between">
-        <div class="w-12 h-12 rounded-2xl bg-[#E6F4EF] text-[#0D4735] border border-[#D4AC6E]/40 flex items-center justify-center shrink-0">
-          <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+    <section class="grid grid-cols-2 lg:grid-cols-4 gap-3">
+      <div onclick="switchTab('sale', true)" class="cursor-pointer bg-white rounded-2xl p-3.5 md:p-4 border border-[#DCE2DF] border-t-4 border-t-[#0D4735] shadow-xs hover:shadow-md transition flex items-center justify-between gap-2">
+        <div class="w-10 h-10 md:w-12 md:h-12 rounded-2xl bg-[#E6F4EF] text-[#0D4735] border border-[#D4AC6E]/40 flex items-center justify-center shrink-0">
+          <svg class="w-5 h-5 md:w-6 md:h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
           </svg>
         </div>
-        <div class="kpi-text text-left">
-          <p data-i18n="kpiSaleTitle" class="text-xs font-bold text-[#5C6B66]">المتاح للبيع</p>
-          <p id="kpiSale" class="text-2xl font-black text-[#1A2421] my-0.5">0</p>
-          <p id="kpiSaleAvg" class="text-[11px] font-bold text-[#1E7E5E]">متوسط: 0 ج.م</p>
+        <div class="kpi-text text-left min-w-0">
+          <p data-i18n="kpiSaleTitle" class="text-[11px] md:text-xs font-bold text-[#5C6B66] truncate">المتاح للبيع</p>
+          <p id="kpiSale" class="text-xl md:text-2xl font-black text-[#1A2421] my-0.5">0</p>
+          <p id="kpiSaleAvg" class="text-[10px] md:text-[11px] font-bold text-[#1E7E5E] truncate">متوسط: 0 ج.م</p>
         </div>
       </div>
 
-      <div onclick="switchTab('rent')" class="cursor-pointer bg-white rounded-2xl p-4 border border-[#DCE2DF] border-t-4 border-t-[#1E7E5E] shadow-xs hover:shadow-md transition flex items-center justify-between">
-        <div class="w-12 h-12 rounded-2xl bg-[#E6F4EF] text-[#1E7E5E] border border-[#D4AC6E]/40 flex items-center justify-center shrink-0">
-          <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+      <div onclick="switchTab('rent', true)" class="cursor-pointer bg-white rounded-2xl p-3.5 md:p-4 border border-[#DCE2DF] border-t-4 border-t-[#1E7E5E] shadow-xs hover:shadow-md transition flex items-center justify-between gap-2">
+        <div class="w-10 h-10 md:w-12 md:h-12 rounded-2xl bg-[#E6F4EF] text-[#1E7E5E] border border-[#D4AC6E]/40 flex items-center justify-center shrink-0">
+          <svg class="w-5 h-5 md:w-6 md:h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"></path>
           </svg>
         </div>
-        <div class="kpi-text text-left">
-          <p data-i18n="kpiRentTitle" class="text-xs font-bold text-[#5C6B66]">المتاح للإيجار</p>
-          <p id="kpiRent" class="text-2xl font-black text-[#1A2421] my-0.5">0</p>
-          <p id="kpiRentAvg" class="text-[11px] font-bold text-[#0D4735]">متوسط: 0 ج.م</p>
+        <div class="kpi-text text-left min-w-0">
+          <p data-i18n="kpiRentTitle" class="text-[11px] md:text-xs font-bold text-[#5C6B66] truncate">المتاح للإيجار</p>
+          <p id="kpiRent" class="text-xl md:text-2xl font-black text-[#1A2421] my-0.5">0</p>
+          <p id="kpiRentAvg" class="text-[10px] md:text-[11px] font-bold text-[#0D4735] truncate">متوسط: 0 ج.م</p>
         </div>
       </div>
 
-      <div onclick="switchTab('req')" class="cursor-pointer bg-white rounded-2xl p-4 border border-[#DCE2DF] border-t-4 border-t-[#D4AC6E] shadow-xs hover:shadow-md transition flex items-center justify-between">
-        <div class="w-12 h-12 rounded-2xl bg-[#FBF5EB] text-[#B0823B] border border-[#D4AC6E]/50 flex items-center justify-center shrink-0">
-          <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+      <div onclick="switchTab('req', true)" class="cursor-pointer bg-white rounded-2xl p-3.5 md:p-4 border border-[#DCE2DF] border-t-4 border-t-[#D4AC6E] shadow-xs hover:shadow-md transition flex items-center justify-between gap-2">
+        <div class="w-10 h-10 md:w-12 md:h-12 rounded-2xl bg-[#FBF5EB] text-[#B0823B] border border-[#D4AC6E]/50 flex items-center justify-center shrink-0">
+          <svg class="w-5 h-5 md:w-6 md:h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"></path>
           </svg>
         </div>
-        <div class="kpi-text text-left">
-          <p data-i18n="kpiReqTitle" class="text-xs font-bold text-[#5C6B66]">طلبات العملاء</p>
-          <p id="kpiReq" class="text-2xl font-black text-[#1A2421] my-0.5">0</p>
-          <p id="kpiReqActive" class="text-[11px] font-bold text-[#B0823B]">نشط: 0 طلب</p>
+        <div class="kpi-text text-left min-w-0">
+          <p data-i18n="kpiReqTitle" class="text-[11px] md:text-xs font-bold text-[#5C6B66] truncate">طلبات العملاء</p>
+          <p id="kpiReq" class="text-xl md:text-2xl font-black text-[#1A2421] my-0.5">0</p>
+          <p id="kpiReqActive" class="text-[10px] md:text-[11px] font-bold text-[#B0823B] truncate">نشط: 0 طلب</p>
         </div>
       </div>
 
-      <div onclick="switchTab('reports')" class="cursor-pointer bg-white rounded-2xl p-4 border border-[#DCE2DF] border-t-4 border-t-[#8F672B] shadow-xs hover:shadow-md transition flex items-center justify-between">
-        <div class="w-12 h-12 rounded-2xl bg-[#FBF5EB] text-[#8F672B] border border-[#D4AC6E]/50 flex items-center justify-center shrink-0">
-          <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+      <div onclick="switchTab('reports', true)" class="cursor-pointer bg-white rounded-2xl p-3.5 md:p-4 border border-[#DCE2DF] border-t-4 border-t-[#8F672B] shadow-xs hover:shadow-md transition flex items-center justify-between gap-2">
+        <div class="w-10 h-10 md:w-12 md:h-12 rounded-2xl bg-[#FBF5EB] text-[#8F672B] border border-[#D4AC6E]/50 flex items-center justify-center shrink-0">
+          <svg class="w-5 h-5 md:w-6 md:h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
           </svg>
         </div>
-        <div class="kpi-text text-left">
-          <p data-i18n="kpiCommTitle" class="text-xs font-bold text-[#5C6B66]">العمولات المتوقعة</p>
-          <p id="kpiComm" class="text-xl font-black text-[#1A2421] my-0.5">0 ج.م</p>
-          <p id="kpiCommClosed" class="text-[11px] font-bold text-[#8F672B]">مغلق: 0 صفقة</p>
+        <div class="kpi-text text-left min-w-0">
+          <p data-i18n="kpiCommTitle" class="text-[11px] md:text-xs font-bold text-[#5C6B66] truncate">العمولات المتوقعة</p>
+          <p id="kpiComm" class="text-base md:text-xl font-black text-[#1A2421] my-0.5 truncate">0 ج.م</p>
+          <p id="kpiCommClosed" class="text-[10px] md:text-[11px] font-bold text-[#8F672B] truncate">مغلق: 0 صفقة</p>
         </div>
       </div>
     </section>
@@ -302,280 +340,238 @@
       <option value="North Coast"></option>
     </datalist>
 
-    <section id="view-dashboard" class="hidden bg-white rounded-3xl border border-[#DCE2DF] shadow-xs p-5 md:p-7 space-y-6">
-      <div class="bg-[#0D4735] text-white rounded-2xl p-5 md:p-6 border border-[#D4AC6E]/40 flex flex-col md:flex-row items-center justify-between gap-4">
-        <div class="flex items-center gap-4 text-center md:text-start">
-          <img src="Logo.jpg" alt="CRM System Icon" class="w-16 h-16 rounded-2xl object-cover border-2 border-[#D4AC6E] shrink-0 shadow-md mx-auto md:mx-0">
-          <div>
-            <h2 data-i18n="dashReadyTitle" class="text-lg md:text-xl font-black text-white">النظام جاهز وفارغ تماماً (0 سجلات)</h2>
-            <p data-i18n="dashReadyDesc" class="text-xs md:text-sm text-[#DCE8E3] mt-1 max-w-2xl leading-relaxed">
-              لا توجد أي بيانات افتراضية. يمكنك البدء فوراً بإضافة الوحدات أو الطلبات أو مواعيد المعاينة يدوياً، أو استيراد ملف Excel الخاص بك، أو تثبيت البرنامج بأيقونة اللوجو على شاشة الموبايل واللاب توب.
-            </p>
-          </div>
-        </div>
-        <div class="shrink-0 bg-[#093527] border border-[#D4AC6E]/50 rounded-2xl px-4 py-3 text-center">
-          <p data-i18n="dashTotalLabel" class="text-[11px] text-[#D4AC6E] font-bold">إجمالي السجلات الحالية</p>
-          <p id="dashTotalCount" class="text-2xl font-black text-white mt-0.5">0</p>
-        </div>
-      </div>
+    <div id="activeSectionAnchor" class="scroll-mt-3 space-y-4">
 
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 text-xs">
-        <button type="button" onclick="document.getElementById('importFile').click()" class="bg-[#1E7E5E] hover:bg-[#16664B] text-white font-extrabold py-3 px-4 rounded-2xl shadow transition flex items-center justify-center gap-2 cursor-pointer">
-          <span data-i18n="btnImportSheet">📥 استيراد شيت Excel / CSV</span>
-        </button>
-        <button type="button" onclick="quickAdd('sale')" class="bg-[#0D4735] hover:bg-[#093527] text-white border border-[#D4AC6E]/40 font-extrabold py-3 px-4 rounded-2xl shadow transition flex items-center justify-center gap-2 cursor-pointer">
-          <span data-i18n="btnQuickAddSale">+ إضافة وحدة للبيع</span>
-        </button>
-        <button type="button" onclick="quickAdd('rent')" class="bg-white hover:bg-[#F6F6F4] text-[#0D4735] border-2 border-[#0D4735] font-extrabold py-3 px-4 rounded-2xl transition flex items-center justify-center gap-2 cursor-pointer">
-          <span data-i18n="btnQuickAddRent">+ إضافة وحدة للإيجار</span>
-        </button>
-        <button type="button" onclick="quickAdd('req')" class="bg-[#FBF5EB] hover:bg-[#F4E6CC] text-[#523A17] border border-[#D4AC6E] font-extrabold py-3 px-4 rounded-2xl transition flex items-center justify-center gap-2 cursor-pointer">
-          <span data-i18n="btnQuickAddReq">+ إضافة طلب عميل</span>
-        </button>
-      </div>
-
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 pt-1">
-        <div class="bg-[#F6F6F4] rounded-2xl p-5 border border-[#DCE2DF] space-y-2">
-          <div class="flex items-center gap-2">
-            <span class="w-7 h-7 rounded-xl bg-[#0D4735] text-[#D4AC6E] font-black text-xs flex items-center justify-center">1</span>
-            <h3 data-i18n="guide1Title" class="text-sm font-extrabold text-[#1A2421]">تثبيت كبرنامج (Install)</h3>
-          </div>
-          <p data-i18n="guide1Desc" class="text-xs text-[#5C6B66] leading-relaxed">
-            اضغطي على زر «تثبيت كبرنامج» بالأعلى لإضافته كأيقونة مستقلة باللوجو على شاشة الموبايل أو سطح مكتب اللابتوب.
-          </p>
-        </div>
-
-        <div class="bg-[#F6F6F4] rounded-2xl p-5 border border-[#DCE2DF] space-y-2">
-          <div class="flex items-center gap-2">
-            <span class="w-7 h-7 rounded-xl bg-[#0D4735] text-[#D4AC6E] font-black text-xs flex items-center justify-center">2</span>
-            <h3 data-i18n="guide2Title" class="text-sm font-extrabold text-[#1A2421]">التذكير بالمواعيد</h3>
-          </div>
-          <p data-i18n="guide2Desc" class="text-xs text-[#5C6B66] leading-relaxed">
-            سجّلي مواعيد المعاينة والاتصال في تبويب «المواعيد والتذكيرات» واضغطي زر Google Calendar ليرن هاتفك في الموعد.
-          </p>
-        </div>
-
-        <div class="bg-[#F6F6F4] rounded-2xl p-5 border border-[#DCE2DF] space-y-2">
-          <div class="flex items-center gap-2">
-            <span class="w-7 h-7 rounded-xl bg-[#0D4735] text-[#D4AC6E] font-black text-xs flex items-center justify-center">3</span>
-            <h3 data-i18n="guide3Title" class="text-sm font-extrabold text-[#1A2421]">النسخ الاحتياطي</h3>
-          </div>
-          <p data-i18n="guide3Desc" class="text-xs text-[#5C6B66] leading-relaxed">
-            البيانات تُحفظ تلقائياً في متصفحك، ويُفضّل الضغط على «نسخة احتياطية» أسبوعياً لحفظ نسخة إضافية على جهازك.
-          </p>
-        </div>
-      </div>
-    </section>
-
-    <section id="view-records" class="bg-white rounded-3xl border border-[#DCE2DF] shadow-xs p-4 md:p-6 space-y-4">
-      <div class="flex flex-wrap items-center justify-between gap-3">
-        <div>
-          <h2 id="sectionTitle" class="text-base md:text-lg font-extrabold text-[#1A2421]">🏢 المتاح للبيع</h2>
-          <p id="sectionSubtitle" class="text-xs text-[#5C6B66]">قائمة الوحدات المعروضة للبيع في مختلف المدن والمناطق</p>
-        </div>
-
-        <div class="flex flex-wrap items-center gap-2 w-full md:w-auto">
-          <input id="searchInput" type="text" oninput="renderCurrentTable()" placeholder="بحث بالمنطقة، الهاتف، البروكر، السيلز..." class="flex-1 md:w-56 border border-[#C2CCC7] rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-[#0D4735]">
-          <select id="statusFilter" onchange="renderCurrentTable()" class="border border-[#C2CCC7] rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-[#0D4735] bg-white">
-            <option value="" data-i18n="filterAll">كل الحالات</option>
-            <option value="جديد" data-i18n="stNew">جديد</option>
-            <option value="جاري التواصل" data-i18n="stContacting">جاري التواصل</option>
-            <option value="معاد معاينة" data-i18n="stViewing">معاد معاينة</option>
-            <option value="تفاوض" data-i18n="stNegotiation">تفاوض</option>
-            <option value="تم التعاقد" data-i18n="stClosed">تم التعاقد</option>
-            <option value="ملغي" data-i18n="stCancelled">ملغي</option>
-          </select>
-          <button type="button" onclick="openAddModal()" data-i18n="btnAddRecord" class="w-full sm:w-auto bg-[#0D4735] hover:bg-[#093527] text-white border border-[#D4AC6E]/40 text-xs font-extrabold px-4 py-2.5 rounded-xl shadow transition cursor-pointer">+ إضافة سجل جديد</button>
-        </div>
-      </div>
-
-      <div id="emptyState" class="py-8 px-4 border-2 border-dashed border-[#C2CCC7] rounded-2xl bg-[#F6F6F4]/80 space-y-6">
-        <div class="text-center space-y-2">
-          <div class="w-16 h-16 rounded-2xl overflow-hidden border-2 border-[#D4AC6E] mx-auto shadow-sm">
-            <img src="Logo.jpg" alt="CRM System Logo" class="w-full h-full object-cover">
-          </div>
-          <h3 data-i18n="emptyTitle" class="text-base md:text-lg font-black text-[#1A2421]">النظام جاهز وفارغ تماماً (0 سجلات)</h3>
-          <p data-i18n="emptyDesc" class="text-xs md:text-sm text-[#5C6B66] max-w-xl mx-auto leading-relaxed">
-            لا توجد أي بيانات افتراضية. يمكنك البدء فوراً بإضافة الوحدات أو الطلبات أو مواعيد المعاينة يدوياً، أو استيراد ملف Excel الخاص بك، أو تثبيت البرنامج بأيقونة اللوجو على شاشة الموبايل واللاب توب.
-          </p>
-          <div class="pt-2 flex flex-wrap justify-center gap-2 text-xs">
-            <button type="button" onclick="document.getElementById('importFile').click()" class="bg-[#1E7E5E] hover:bg-[#16664B] text-white font-extrabold px-4 py-2.5 rounded-xl shadow cursor-pointer">
-              <span data-i18n="btnImportSheet">📥 استيراد شيت Excel / CSV</span>
-            </button>
-            <button type="button" onclick="quickAdd('sale')" class="bg-[#0D4735] hover:bg-[#093527] text-white font-extrabold px-4 py-2.5 rounded-xl shadow cursor-pointer">
-              <span data-i18n="btnQuickAddSale">+ إضافة وحدة للبيع</span>
-            </button>
-            <button type="button" onclick="quickAdd('rent')" class="bg-white hover:bg-[#ECEEEB] text-[#0D4735] border border-[#0D4735] font-extrabold px-4 py-2.5 rounded-xl cursor-pointer">
-              <span data-i18n="btnQuickAddRent">+ إضافة وحدة للإيجار</span>
-            </button>
-            <button type="button" onclick="quickAdd('req')" class="bg-[#FBF5EB] hover:bg-[#F4E6CC] text-[#523A17] border border-[#D4AC6E] font-extrabold px-4 py-2.5 rounded-xl cursor-pointer">
-              <span data-i18n="btnQuickAddReq">+ إضافة طلب عميل</span>
-            </button>
-          </div>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-3 max-w-5xl mx-auto">
-          <div class="bg-white rounded-2xl p-4 border border-[#DCE2DF] space-y-1.5">
-            <div class="flex items-center gap-2">
-              <span class="w-6 h-6 rounded-lg bg-[#0D4735] text-[#D4AC6E] font-black text-xs flex items-center justify-center">1</span>
-              <h4 data-i18n="guide1Title" class="text-xs font-extrabold text-[#1A2421]">تثبيت كبرنامج (Install)</h4>
+      <section id="view-dashboard" class="hidden bg-white rounded-3xl border border-[#DCE2DF] shadow-xs p-5 md:p-7 space-y-6">
+        <div class="bg-[#0D4735] text-white rounded-2xl p-5 md:p-6 border border-[#D4AC6E]/40 flex flex-col md:flex-row items-center justify-between gap-4">
+          <div class="flex items-center gap-4 text-center md:text-start">
+            <img src="Logo.jpg" alt="CRM System Icon" class="w-16 h-16 rounded-2xl object-cover border-2 border-[#D4AC6E] shrink-0 shadow-md mx-auto md:mx-0">
+            <div>
+              <h2 data-i18n="dashReadyTitle" class="text-lg md:text-xl font-black text-white">مساحة عمل جاهزة لإدارة العقارات والعملاء</h2>
+              <p data-i18n="dashReadyDesc" class="text-xs md:text-sm text-[#DCE8E3] mt-1 max-w-2xl leading-relaxed">
+                ابدئي بإضافة وحدات للبيع أو الإيجار وطلبات العملاء مباشرة، أو استوردي ملف Excel، وسيقوم النظام تلقائياً بحساب العمولات والمطابقة الذكية وتجهيز الرسائل والإعلانات.
+              </p>
             </div>
-            <p data-i18n="guide1Desc" class="text-[11px] text-[#5C6B66] leading-relaxed">
+          </div>
+          <div class="shrink-0 bg-[#093527] border border-[#D4AC6E]/50 rounded-2xl px-4 py-3 text-center">
+            <p data-i18n="dashTotalLabel" class="text-[11px] text-[#D4AC6E] font-bold">إجمالي السجلات الحالية</p>
+            <p id="dashTotalCount" class="text-2xl font-black text-white mt-0.5">0</p>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 text-xs">
+          <button type="button" onclick="document.getElementById('importFile').click()" class="bg-[#1E7E5E] hover:bg-[#16664B] text-white font-extrabold py-3 px-4 rounded-2xl shadow transition flex items-center justify-center gap-2 cursor-pointer">
+            <span data-i18n="btnImportSheet">📥 استيراد شيت Excel / CSV</span>
+          </button>
+          <button type="button" onclick="quickAdd('sale')" class="bg-[#0D4735] hover:bg-[#093527] text-white border border-[#D4AC6E]/40 font-extrabold py-3 px-4 rounded-2xl shadow transition flex items-center justify-center gap-2 cursor-pointer">
+            <span data-i18n="btnQuickAddSale">+ إضافة وحدة للبيع</span>
+          </button>
+          <button type="button" onclick="quickAdd('rent')" class="bg-white hover:bg-[#F6F6F4] text-[#0D4735] border-2 border-[#0D4735] font-extrabold py-3 px-4 rounded-2xl transition flex items-center justify-center gap-2 cursor-pointer">
+            <span data-i18n="btnQuickAddRent">+ إضافة وحدة للإيجار</span>
+          </button>
+          <button type="button" onclick="quickAdd('req')" class="bg-[#FBF5EB] hover:bg-[#F4E6CC] text-[#523A17] border border-[#D4AC6E] font-extrabold py-3 px-4 rounded-2xl transition flex items-center justify-center gap-2 cursor-pointer">
+            <span data-i18n="btnQuickAddReq">+ إضافة طلب عميل</span>
+          </button>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 pt-1">
+          <div class="bg-[#F6F6F4] rounded-2xl p-5 border border-[#DCE2DF] space-y-2">
+            <div class="flex items-center gap-2">
+              <span class="w-7 h-7 rounded-xl bg-[#0D4735] text-[#D4AC6E] font-black text-xs flex items-center justify-center">1</span>
+              <h3 data-i18n="guide1Title" class="text-sm font-extrabold text-[#1A2421]">تثبيت كبرنامج (Install)</h3>
+            </div>
+            <p data-i18n="guide1Desc" class="text-xs text-[#5C6B66] leading-relaxed">
               اضغطي على زر «تثبيت كبرنامج» بالأعلى لإضافته كأيقونة مستقلة باللوجو على شاشة الموبايل أو سطح مكتب اللابتوب.
             </p>
           </div>
 
-          <div class="bg-white rounded-2xl p-4 border border-[#DCE2DF] space-y-1.5">
+          <div class="bg-[#F6F6F4] rounded-2xl p-5 border border-[#DCE2DF] space-y-2">
             <div class="flex items-center gap-2">
-              <span class="w-6 h-6 rounded-lg bg-[#0D4735] text-[#D4AC6E] font-black text-xs flex items-center justify-center">2</span>
-              <h4 data-i18n="guide2Title" class="text-xs font-extrabold text-[#1A2421]">التذكير بالمواعيد</h4>
+              <span class="w-7 h-7 rounded-xl bg-[#0D4735] text-[#D4AC6E] font-black text-xs flex items-center justify-center">2</span>
+              <h3 data-i18n="guide2Title" class="text-sm font-extrabold text-[#1A2421]">التذكير بالمواعيد</h3>
             </div>
-            <p data-i18n="guide2Desc" class="text-[11px] text-[#5C6B66] leading-relaxed">
+            <p data-i18n="guide2Desc" class="text-xs text-[#5C6B66] leading-relaxed">
               سجّلي مواعيد المعاينة والاتصال في تبويب «المواعيد والتذكيرات» واضغطي زر Google Calendar ليرن هاتفك في الموعد.
             </p>
           </div>
 
-          <div class="bg-white rounded-2xl p-4 border border-[#DCE2DF] space-y-1.5">
+          <div class="bg-[#F6F6F4] rounded-2xl p-5 border border-[#DCE2DF] space-y-2">
             <div class="flex items-center gap-2">
-              <span class="w-6 h-6 rounded-lg bg-[#0D4735] text-[#D4AC6E] font-black text-xs flex items-center justify-center">3</span>
-              <h4 data-i18n="guide3Title" class="text-xs font-extrabold text-[#1A2421]">النسخ الاحتياطي</h4>
+              <span class="w-7 h-7 rounded-xl bg-[#0D4735] text-[#D4AC6E] font-black text-xs flex items-center justify-center">3</span>
+              <h3 data-i18n="guide3Title" class="text-sm font-extrabold text-[#1A2421]">النسخ الاحتياطي</h3>
             </div>
-            <p data-i18n="guide3Desc" class="text-[11px] text-[#5C6B66] leading-relaxed">
+            <p data-i18n="guide3Desc" class="text-xs text-[#5C6B66] leading-relaxed">
               البيانات تُحفظ تلقائياً في متصفحك، ويُفضّل الضغط على «نسخة احتياطية» أسبوعياً لحفظ نسخة إضافية على جهازك.
             </p>
           </div>
         </div>
-      </div>
+      </section>
 
-      <div id="tableWrapper" class="hidden overflow-x-auto">
-        <table id="dataTable" class="w-full text-right border-collapse text-xs">
-          <thead>
-            <tr id="tableHeadRow" class="bg-[#0D4735] text-white"></tr>
-          </thead>
-          <tbody id="tableBody" class="divide-y divide-[#DCE2DF]"></tbody>
-        </table>
-      </div>
-    </section>
-
-    <section id="view-match" class="hidden bg-white rounded-3xl border border-[#DCE2DF] shadow-xs p-4 md:p-6 space-y-4">
-      <div class="flex flex-wrap items-center justify-between gap-2">
-        <div>
-          <h2 data-i18n="matchTitle" class="text-base md:text-lg font-extrabold text-[#1A2421]">⚡ المطابقة الذكية بين العروض والطلبات</h2>
-          <p data-i18n="matchSub" class="text-xs text-[#5C6B66]">يقارن النظام تلقائياً نوع العملية (بيع/إيجار)، المنطقة، نوع الوحدة، والميزانية المرصودة</p>
-        </div>
-        <button type="button" onclick="renderMatches()" data-i18n="btnRefreshMatch" class="bg-[#0D4735] hover:bg-[#093527] text-[#D4AC6E] border border-[#D4AC6E]/40 text-xs font-bold px-4 py-2 rounded-xl cursor-pointer">🔄 تحديث المطابقة</button>
-      </div>
-      <div id="matchesContainer" class="space-y-3"></div>
-    </section>
-
-    <section id="view-tasks" class="hidden bg-white rounded-3xl border border-[#DCE2DF] shadow-xs p-4 md:p-6 space-y-4">
-      <div class="flex flex-wrap items-center justify-between gap-3">
-        <div>
-          <h2 data-i18n="tasksTitle" class="text-base md:text-lg font-extrabold text-[#1A2421]">📅 مفكرة المواعيد والمعاينات والتذكيرات</h2>
-          <p data-i18n="tasksSub" class="text-xs text-[#5C6B66]">سجّلي مواعيد المعاينات ومكالمات المتابعة وأضيفيها لتقويم جوجل (Google Calendar) ليرن هاتفك في الموعد</p>
-        </div>
-        <button type="button" onclick="openTaskModal()" data-i18n="btnAddTask" class="bg-[#D4AC6E] hover:bg-[#C29653] text-[#0D4735] text-xs font-extrabold px-4 py-2.5 rounded-xl shadow cursor-pointer">+ إضافة ميعاد / تذكير</button>
-      </div>
-      <div id="tasksContainer" class="grid grid-cols-1 md:grid-cols-2 gap-3"></div>
-    </section>
-
-    <section id="view-reports" class="hidden space-y-4">
-      <div class="bg-white rounded-3xl border border-[#DCE2DF] shadow-xs p-4 md:p-6 space-y-4">
-        <div>
-          <h2 data-i18n="calcTitle" class="text-base md:text-lg font-extrabold text-[#1A2421]">🧮 حاسبة العمولات وتوزيع الأرباح</h2>
-          <p data-i18n="calcSub" class="text-xs text-[#5C6B66]">احسبي إجمالي العمولة وصافي الشركة ونصيب السيلز والبروكر الخارجي لأي صفقة فوراً</p>
-        </div>
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 text-xs bg-[#F6F6F4] p-4 rounded-2xl border border-[#DCE2DF]">
+      <section id="view-records" class="bg-white rounded-3xl border border-[#DCE2DF] shadow-xs p-4 md:p-6 space-y-4">
+        <div class="flex flex-wrap items-center justify-between gap-3">
           <div>
-            <label data-i18n="calcPriceLbl" class="block font-bold text-[#1A2421] mb-1">قيمة الصفقة (ج.م)</label>
-            <input id="c_price" type="number" value="3000000" oninput="runCalc()" class="w-full border border-[#C2CCC7] rounded-xl px-3 py-2 bg-white font-bold">
+            <h2 id="sectionTitle" class="text-base md:text-lg font-extrabold text-[#1A2421]">🏢 المتاح للبيع</h2>
+            <p id="sectionSubtitle" class="text-xs text-[#5C6B66]">قائمة الوحدات المعروضة للبيع في مختلف المدن والمناطق</p>
+          </div>
+
+          <div class="flex flex-wrap items-center gap-2 w-full md:w-auto">
+            <input id="searchInput" type="text" oninput="renderCurrentTable()" placeholder="بحث بالمنطقة، الهاتف، البروكر، السيلز..." class="flex-1 md:w-56 border border-[#C2CCC7] rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-[#0D4735]">
+            <select id="statusFilter" onchange="renderCurrentTable()" class="border border-[#C2CCC7] rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-[#0D4735] bg-white">
+              <option value="" data-i18n="filterAll">كل الحالات</option>
+              <option value="جديد" data-i18n="stNew">جديد</option>
+              <option value="جاري التواصل" data-i18n="stContacting">جاري التواصل</option>
+              <option value="معاد معاينة" data-i18n="stViewing">معاد معاينة</option>
+              <option value="تفاوض" data-i18n="stNegotiation">تفاوض</option>
+              <option value="تم التعاقد" data-i18n="stClosed">تم التعاقد</option>
+              <option value="ملغي" data-i18n="stCancelled">ملغي</option>
+            </select>
+            <button type="button" onclick="openAddModal()" data-i18n="btnAddRecord" class="w-full sm:w-auto bg-[#0D4735] hover:bg-[#093527] text-white border border-[#D4AC6E]/40 text-xs font-extrabold px-4 py-2.5 rounded-xl shadow transition cursor-pointer">+ إضافة سجل جديد</button>
+          </div>
+        </div>
+
+        <div id="emptyState" class="hidden py-8 px-4 border-2 border-dashed border-[#C2CCC7] rounded-2xl bg-[#F6F6F4]/80 space-y-6">
+          <div class="text-center space-y-2">
+            <div class="w-16 h-16 rounded-2xl overflow-hidden border-2 border-[#D4AC6E] mx-auto shadow-sm">
+              <img src="Logo.jpg" alt="CRM System Logo" class="w-full h-full object-cover">
+            </div>
+            <h3 data-i18n="emptyTitle" class="text-base md:text-lg font-black text-[#1A2421]">لا توجد سجلات في هذا القسم حالياً</h3>
+            <p data-i18n="emptyDesc" class="text-xs md:text-sm text-[#5C6B66] max-w-xl mx-auto leading-relaxed">
+              يمكنك البدء بإضافة سجلات جديدة يدوياً أو استيراد ملف Excel.
+            </p>
+          </div>
+        </div>
+
+        <div id="tableWrapper" class="overflow-x-auto">
+          <table id="dataTable" class="w-full text-right border-collapse text-xs">
+            <thead>
+              <tr id="tableHeadRow" class="bg-[#0D4735] text-white"></tr>
+            </thead>
+            <tbody id="tableBody" class="divide-y divide-[#DCE2DF]"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section id="view-match" class="hidden bg-white rounded-3xl border border-[#DCE2DF] shadow-xs p-4 md:p-6 space-y-4">
+        <div class="flex flex-wrap items-center justify-between gap-2">
+          <div>
+            <h2 data-i18n="matchTitle" class="text-base md:text-lg font-extrabold text-[#1A2421]">⚡ المطابقة الذكية بين العروض والطلبات</h2>
+            <p data-i18n="matchSub" class="text-xs text-[#5C6B66]">يقارن النظام تلقائياً نوع العملية (بيع/إيجار)، المنطقة، نوع الوحدة، والميزانية المرصودة</p>
+          </div>
+          <button type="button" onclick="renderMatches()" data-i18n="btnRefreshMatch" class="bg-[#0D4735] hover:bg-[#093527] text-[#D4AC6E] border border-[#D4AC6E]/40 text-xs font-bold px-4 py-2 rounded-xl cursor-pointer">🔄 تحديث المطابقة</button>
+        </div>
+        <div id="matchesContainer" class="space-y-3"></div>
+      </section>
+
+      <section id="view-tasks" class="hidden bg-white rounded-3xl border border-[#DCE2DF] shadow-xs p-4 md:p-6 space-y-4">
+        <div class="flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <h2 data-i18n="tasksTitle" class="text-base md:text-lg font-extrabold text-[#1A2421]">📅 مفكرة المواعيد والمعاينات والتذكيرات</h2>
+            <p data-i18n="tasksSub" class="text-xs text-[#5C6B66]">سجّلي مواعيد المعاينات ومكالمات المتابعة وأضيفيها لتقويم جوجل (Google Calendar) ليرن هاتفك في الموعد</p>
+          </div>
+          <button type="button" onclick="openTaskModal()" data-i18n="btnAddTask" class="bg-[#D4AC6E] hover:bg-[#C29653] text-[#0D4735] text-xs font-extrabold px-4 py-2.5 rounded-xl shadow cursor-pointer">+ إضافة ميعاد / تذكير</button>
+        </div>
+        <div id="tasksContainer" class="grid grid-cols-1 md:grid-cols-2 gap-3"></div>
+      </section>
+
+      <section id="view-reports" class="hidden space-y-4">
+        <div class="bg-white rounded-3xl border border-[#DCE2DF] shadow-xs p-4 md:p-6 space-y-4">
+          <div>
+            <h2 data-i18n="calcTitle" class="text-base md:text-lg font-extrabold text-[#1A2421]">🧮 حاسبة العمولات وتوزيع الأرباح</h2>
+            <p data-i18n="calcSub" class="text-xs text-[#5C6B66]">احسبي إجمالي العمولة وصافي الشركة ونصيب السيلز والبروكر الخارجي لأي صفقة فوراً</p>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 text-xs bg-[#F6F6F4] p-4 rounded-2xl border border-[#DCE2DF]">
+            <div>
+              <label data-i18n="calcPriceLbl" class="block font-bold text-[#1A2421] mb-1">قيمة الصفقة (ج.م)</label>
+              <input id="c_price" type="number" value="4500000" oninput="runCalc()" class="w-full border border-[#C2CCC7] rounded-xl px-3 py-2 bg-white font-bold">
+            </div>
+            <div>
+              <label data-i18n="calcTotalPctLbl" class="block font-bold text-[#1A2421] mb-1">نسبة العمولة الكلية (%)</label>
+              <input id="c_totalPct" type="number" step="0.1" value="2.5" oninput="runCalc()" class="w-full border border-[#C2CCC7] rounded-xl px-3 py-2 bg-white font-bold">
+            </div>
+            <div>
+              <label data-i18n="calcSalesPctLbl" class="block font-bold text-[#1A2421] mb-1">نسبة السيلز من العمولة (%)</label>
+              <input id="c_salesPct" type="number" step="1" value="25" oninput="runCalc()" class="w-full border border-[#C2CCC7] rounded-xl px-3 py-2 bg-white font-bold">
+            </div>
+            <div>
+              <label data-i18n="calcBrokerPctLbl" class="block font-bold text-[#1A2421] mb-1">نسبة البروكر / شريك (%)</label>
+              <input id="c_brokerPct" type="number" step="1" value="15" oninput="runCalc()" class="w-full border border-[#C2CCC7] rounded-xl px-3 py-2 bg-white font-bold">
+            </div>
+          </div>
+          <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 text-xs">
+            <div class="p-3.5 rounded-2xl bg-[#E6F4EF] border border-[#1E7E5E]/30">
+              <p data-i18n="calcResTotal" class="text-[#0D4735] font-bold">إجمالي العمولة</p>
+              <p id="c_resTotal" class="text-lg font-black text-[#093527] mt-1">112,500 ج.م</p>
+            </div>
+            <div class="p-3.5 rounded-2xl bg-[#FBF5EB] border border-[#D4AC6E]/50">
+              <p data-i18n="calcResSales" class="text-[#8F672B] font-bold">نصيب السيلز</p>
+              <p id="c_resSales" class="text-lg font-black text-[#523A17] mt-1">28,125 ج.م</p>
+            </div>
+            <div class="p-3.5 rounded-2xl bg-[#F6F6F4] border border-[#C2CCC7]">
+              <p data-i18n="calcResBroker" class="text-[#5C6B66] font-bold">نصيب البروكر / الشريك</p>
+              <p id="c_resBroker" class="text-lg font-black text-[#1A2421] mt-1">16,875 ج.م</p>
+            </div>
+            <div class="p-3.5 rounded-2xl bg-[#0D4735] text-white border border-[#D4AC6E]/40">
+              <p data-i18n="calcResNet" class="text-[#DCE8E3] font-bold">صافي ربح الشركة</p>
+              <p id="c_resNet" class="text-lg font-black text-[#D4AC6E] mt-1">67,500 ج.م</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+          <div class="bg-white rounded-3xl border border-[#DCE2DF] shadow-xs p-4 md:p-6">
+            <h3 data-i18n="chartStatusTitle" class="text-sm font-extrabold text-[#1A2421] mb-3">📈 توزيع حالات الصفقات (Pipeline)</h3>
+            <div class="h-64 flex items-center justify-center">
+              <canvas id="statusChart"></canvas>
+            </div>
+          </div>
+          <div class="bg-white rounded-3xl border border-[#DCE2DF] shadow-xs p-4 md:p-6">
+            <h3 data-i18n="chartSalesTitle" class="text-sm font-extrabold text-[#1A2421] mb-3">🏆 أداء السيلز (عدد السجلات والصفقات)</h3>
+            <div class="h-64 flex items-center justify-center">
+              <canvas id="salesChart"></canvas>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="view-ads" class="hidden bg-white rounded-3xl border border-[#DCE2DF] shadow-xs p-4 md:p-6 space-y-4">
+        <div>
+          <h2 data-i18n="adsTitle" class="text-base md:text-lg font-extrabold text-[#1A2421]">📣 مولّد الإعلانات ورسائل الواتساب الجاهزة</h2>
+          <p data-i18n="adsSub" class="text-xs text-[#5C6B66]">اختاري أي وحدة أو طلب لتوليد بوست احترافي لجروبات فيسبوك أو رسالة واتساب مباشرة برقم التواصل المسجل</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-3 bg-[#F6F6F4] p-4 rounded-2xl border border-[#DCE2DF]">
+          <div>
+            <label data-i18n="adSecLabel" class="block text-xs font-bold text-[#1A2421] mb-1">القسم</label>
+            <select id="adSourceType" onchange="populateAdItems()" class="w-full border border-[#C2CCC7] rounded-xl px-3 py-2 text-xs bg-white">
+              <option value="sale" data-i18n="optSale">المتاح للبيع</option>
+              <option value="rent" data-i18n="optRent">المتاح للإيجار</option>
+              <option value="req" data-i18n="optReq">طلبات العملاء (المطلوب)</option>
+            </select>
           </div>
           <div>
-            <label data-i18n="calcTotalPctLbl" class="block font-bold text-[#1A2421] mb-1">نسبة العمولة الكلية (%)</label>
-            <input id="c_totalPct" type="number" step="0.1" value="2.5" oninput="runCalc()" class="w-full border border-[#C2CCC7] rounded-xl px-3 py-2 bg-white font-bold">
+            <label data-i18n="adItemLabel" class="block text-xs font-bold text-[#1A2421] mb-1">اختاري الوحدة / الطلب</label>
+            <select id="adItemSelect" onchange="generateAdText()" class="w-full border border-[#C2CCC7] rounded-xl px-3 py-2 text-xs bg-white"></select>
           </div>
           <div>
-            <label data-i18n="calcSalesPctLbl" class="block font-bold text-[#1A2421] mb-1">نسبة السيلز من العمولة (%)</label>
-            <input id="c_salesPct" type="number" step="1" value="25" oninput="runCalc()" class="w-full border border-[#C2CCC7] rounded-xl px-3 py-2 bg-white font-bold">
-          </div>
-          <div>
-            <label data-i18n="calcBrokerPctLbl" class="block font-bold text-[#1A2421] mb-1">نسبة البروكر / شريك (%)</label>
-            <input id="c_brokerPct" type="number" step="1" value="0" oninput="runCalc()" class="w-full border border-[#C2CCC7] rounded-xl px-3 py-2 bg-white font-bold">
-          </div>
-        </div>
-        <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 text-xs">
-          <div class="p-3.5 rounded-2xl bg-[#E6F4EF] border border-[#1E7E5E]/30">
-            <p data-i18n="calcResTotal" class="text-[#0D4735] font-bold">إجمالي العمولة</p>
-            <p id="c_resTotal" class="text-lg font-black text-[#093527] mt-1">75,000 ج.م</p>
-          </div>
-          <div class="p-3.5 rounded-2xl bg-[#FBF5EB] border border-[#D4AC6E]/50">
-            <p data-i18n="calcResSales" class="text-[#8F672B] font-bold">نصيب السيلز</p>
-            <p id="c_resSales" class="text-lg font-black text-[#523A17] mt-1">18,750 ج.م</p>
-          </div>
-          <div class="p-3.5 rounded-2xl bg-[#F6F6F4] border border-[#C2CCC7]">
-            <p data-i18n="calcResBroker" class="text-[#5C6B66] font-bold">نصيب البروكر / الشريك</p>
-            <p id="c_resBroker" class="text-lg font-black text-[#1A2421] mt-1">0 ج.م</p>
-          </div>
-          <div class="p-3.5 rounded-2xl bg-[#0D4735] text-white border border-[#D4AC6E]/40">
-            <p data-i18n="calcResNet" class="text-[#DCE8E3] font-bold">صافي ربح الشركة</p>
-            <p id="c_resNet" class="text-lg font-black text-[#D4AC6E] mt-1">56,250 ج.م</p>
+            <label data-i18n="adTplLabel" class="block text-xs font-bold text-[#1A2421] mb-1">نوع الصيغة</label>
+            <select id="adTemplateType" onchange="generateAdText()" class="w-full border border-[#C2CCC7] rounded-xl px-3 py-2 text-xs bg-white">
+              <option value="fb" data-i18n="tplFb">بوست إعلان فيسبوك / جروبات</option>
+              <option value="wa_client" data-i18n="tplWaClient">رسالة واتساب للعميل</option>
+              <option value="wa_owner" data-i18n="tplWaOwner">رسالة واتساب للمالك / البروكر</option>
+            </select>
           </div>
         </div>
-      </div>
 
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        <div class="bg-white rounded-3xl border border-[#DCE2DF] shadow-xs p-4 md:p-6">
-          <h3 data-i18n="chartStatusTitle" class="text-sm font-extrabold text-[#1A2421] mb-3">📈 توزيع حالات الصفقات (Pipeline)</h3>
-          <div class="h-64 flex items-center justify-center">
-            <canvas id="statusChart"></canvas>
+        <div class="space-y-2">
+          <textarea id="generatedAdBox" rows="8" class="w-full border border-[#C2CCC7] rounded-2xl p-4 text-xs md:text-sm leading-relaxed focus:outline-none focus:border-[#0D4735]" placeholder="ستظهر صيغة الإعلان هنا بمجرد إضافة سجلات واختيارها..."></textarea>
+          <div class="flex flex-wrap gap-2">
+            <button type="button" onclick="copyAdText()" data-i18n="btnCopyAd" class="bg-[#0D4735] hover:bg-[#093527] text-white text-xs font-bold px-4 py-2.5 rounded-xl cursor-pointer">📋 نسخ النص</button>
+            <button type="button" onclick="sendAdViaWhatsapp()" data-i18n="btnSendWa" class="bg-[#1E7E5E] hover:bg-[#16664B] text-white text-xs font-bold px-4 py-2.5 rounded-xl cursor-pointer">💬 فتح في واتساب</button>
           </div>
         </div>
-        <div class="bg-white rounded-3xl border border-[#DCE2DF] shadow-xs p-4 md:p-6">
-          <h3 data-i18n="chartSalesTitle" class="text-sm font-extrabold text-[#1A2421] mb-3">🏆 أداء السيلز (عدد السجلات والصفقات)</h3>
-          <div class="h-64 flex items-center justify-center">
-            <canvas id="salesChart"></canvas>
-          </div>
-        </div>
-      </div>
-    </section>
+      </section>
 
-    <section id="view-ads" class="hidden bg-white rounded-3xl border border-[#DCE2DF] shadow-xs p-4 md:p-6 space-y-4">
-      <div>
-        <h2 data-i18n="adsTitle" class="text-base md:text-lg font-extrabold text-[#1A2421]">📣 مولّد الإعلانات ورسائل الواتساب الجاهزة</h2>
-        <p data-i18n="adsSub" class="text-xs text-[#5C6B66]">اختاري أي وحدة أو طلب لتوليد بوست احترافي لجروبات فيسبوك أو رسالة واتساب مباشرة برقم التواصل المسجل</p>
-      </div>
-
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-3 bg-[#F6F6F4] p-4 rounded-2xl border border-[#DCE2DF]">
-        <div>
-          <label data-i18n="adSecLabel" class="block text-xs font-bold text-[#1A2421] mb-1">القسم</label>
-          <select id="adSourceType" onchange="populateAdItems()" class="w-full border border-[#C2CCC7] rounded-xl px-3 py-2 text-xs bg-white">
-            <option value="sale" data-i18n="optSale">المتاح للبيع</option>
-            <option value="rent" data-i18n="optRent">المتاح للإيجار</option>
-            <option value="req" data-i18n="optReq">طلبات العملاء (المطلوب)</option>
-          </select>
-        </div>
-        <div>
-          <label data-i18n="adItemLabel" class="block text-xs font-bold text-[#1A2421] mb-1">اختاري الوحدة / الطلب</label>
-          <select id="adItemSelect" onchange="generateAdText()" class="w-full border border-[#C2CCC7] rounded-xl px-3 py-2 text-xs bg-white"></select>
-        </div>
-        <div>
-          <label data-i18n="adTplLabel" class="block text-xs font-bold text-[#1A2421] mb-1">نوع الصيغة</label>
-          <select id="adTemplateType" onchange="generateAdText()" class="w-full border border-[#C2CCC7] rounded-xl px-3 py-2 text-xs bg-white">
-            <option value="fb" data-i18n="tplFb">بوست إعلان فيسبوك / جروبات</option>
-            <option value="wa_client" data-i18n="tplWaClient">رسالة واتساب للعميل</option>
-            <option value="wa_owner" data-i18n="tplWaOwner">رسالة واتساب للمالك / البروكر</option>
-          </select>
-        </div>
-      </div>
-
-      <div class="space-y-2">
-        <textarea id="generatedAdBox" rows="8" class="w-full border border-[#C2CCC7] rounded-2xl p-4 text-xs md:text-sm leading-relaxed focus:outline-none focus:border-[#0D4735]" placeholder="ستظهر صيغة الإعلان هنا بمجرد إضافة سجلات واختيارها..."></textarea>
-        <div class="flex flex-wrap gap-2">
-          <button type="button" onclick="copyAdText()" data-i18n="btnCopyAd" class="bg-[#0D4735] hover:bg-[#093527] text-white text-xs font-bold px-4 py-2.5 rounded-xl cursor-pointer">📋 نسخ النص</button>
-          <button type="button" onclick="sendAdViaWhatsapp()" data-i18n="btnSendWa" class="bg-[#1E7E5E] hover:bg-[#16664B] text-white text-xs font-bold px-4 py-2.5 rounded-xl cursor-pointer">💬 فتح في واتساب</button>
-        </div>
-      </div>
-    </section>
+    </div>
 
   </div>
 
@@ -821,12 +817,21 @@
   </div>
 
   <script>
-    const STORAGE_KEY = 'crm_system_v4_3_data';
+    const STORAGE_KEY = 'crm_full_v5_data';
     let currentTab = 'sale';
     let activeBrochureItem = null;
     let statusChartInstance = null;
     let salesChartInstance = null;
     let deferredInstallPrompt = null;
+
+    let db = {
+      lang: 'ar',
+      whatsapp: '01023088574',
+      sale: [],
+      rent: [],
+      req: [],
+      tasks: []
+    };
 
     window.addEventListener('beforeinstallprompt', (e) => {
       e.preventDefault();
@@ -848,10 +853,35 @@
       document.getElementById('installModal').classList.add('hidden');
     }
 
+    function openNavDrawer() {
+      const drawer = document.getElementById('sideDrawer');
+      const overlay = document.getElementById('sidebarOverlay');
+      overlay.classList.remove('hidden');
+      requestAnimationFrame(() => {
+        drawer.classList.remove('-translate-x-full', 'rtl:translate-x-full');
+      });
+    }
+
+    function closeNavDrawer() {
+      const drawer = document.getElementById('sideDrawer');
+      const overlay = document.getElementById('sidebarOverlay');
+      drawer.classList.add('-translate-x-full', 'rtl:translate-x-full');
+      setTimeout(() => {
+        overlay.classList.add('hidden');
+      }, 200);
+    }
+
+    function selectDrawerTab(tab) {
+      closeNavDrawer();
+      switchTab(tab, true);
+    }
+
     const i18n = {
       ar: {
         toggleBtn: 'English',
-        badgeTitle: 'نظام إدارة العقارات والعملاء',
+        drawerSubtitle: 'قائمة الأقسام',
+        btnSectionsMenu: 'الأقسام',
+        badgeTitle: 'النسخة الكاملة (Full)',
         headerSub: 'إدارة شاملة للمعروض والمطلوب، المواعيد، المطابقة الذكية، العمولات، والتسويق',
         waAdsLabel: 'واتساب الإعلانات:',
         btnInstallApp: '📲 تثبيت كبرنامج (Install)',
@@ -871,6 +901,16 @@
         tabTasks: '📅 المواعيد والتذكيرات',
         tabReports: '📈 التقارير والعمولات',
         tabAds: '📣 مولّد الإعلانات والرسائل',
+        pillNames: {
+          dashboard: 'لوحة المؤشرات',
+          sale: 'المتاح للبيع',
+          rent: 'المتاح للإيجار',
+          req: 'المطلوب',
+          match: 'المطابقة الذكية',
+          tasks: 'المواعيد',
+          reports: 'التقارير والعمولات',
+          ads: 'الإعلانات والرسائل'
+        },
         kpiSaleTitle: 'المتاح للبيع',
         kpiRentTitle: 'المتاح للإيجار',
         kpiReqTitle: 'طلبات العملاء',
@@ -879,8 +919,8 @@
         currency: 'ج.م',
         activeReq: (n) => `نشط: ${n} طلب`,
         closedDealsSub: (n) => `مغلق: ${n} صفقة`,
-        dashReadyTitle: 'النظام جاهز وفارغ تماماً (0 سجلات)',
-        dashReadyDesc: 'لا توجد أي بيانات افتراضية. يمكنك البدء فوراً بإضافة الوحدات أو الطلبات أو مواعيد المعاينة يدوياً، أو استيراد ملف Excel الخاص بك، أو تثبيت البرنامج بأيقونة اللوجو على شاشة الموبايل واللاب توب.',
+        dashReadyTitle: 'مساحة عمل جاهزة لإدارة العقارات والعملاء',
+        dashReadyDesc: 'ابدئي بإضافة وحدات للبيع أو الإيجار وطلبات العملاء مباشرة، أو استوردي ملف Excel، وسيقوم النظام تلقائياً بحساب العمولات والمطابقة الذكية وتجهيز الرسائل والإعلانات.',
         dashTotalLabel: 'إجمالي السجلات الحالية',
         btnQuickAddSale: '+ إضافة وحدة للبيع',
         btnQuickAddRent: '+ إضافة وحدة للإيجار',
@@ -913,8 +953,8 @@
         stClosed: 'تم التعاقد',
         stCancelled: 'ملغي',
         btnAddRecord: '+ إضافة سجل جديد',
-        emptyTitle: 'النظام جاهز وفارغ تماماً (0 سجلات)',
-        emptyDesc: 'لا توجد أي بيانات افتراضية. يمكنك البدء فوراً بإضافة الوحدات أو الطلبات أو مواعيد المعاينة يدوياً، أو استيراد ملف Excel الخاص بك، أو تثبيت البرنامج بأيقونة اللوجو على شاشة الموبايل واللاب توب.',
+        emptyTitle: 'لا توجد سجلات في هذا القسم حالياً',
+        emptyDesc: 'يمكنك البدء بإضافة سجلات جديدة يدوياً أو استيراد ملف Excel.',
         btnImportSheet: '📥 استيراد شيت Excel / CSV',
         thLoc: 'المدينة / المنطقة',
         thUnit: 'الوحدة والمساحة',
@@ -1021,7 +1061,9 @@
       },
       en: {
         toggleBtn: 'العربية',
-        badgeTitle: 'Real Estate & Client Management',
+        drawerSubtitle: 'Sections Menu',
+        btnSectionsMenu: 'Sections',
+        badgeTitle: 'Full Version',
         headerSub: 'Complete management for listings, client requests, appointments, smart matching, commissions & marketing',
         waAdsLabel: 'Ads WhatsApp:',
         btnInstallApp: '📲 Install as App',
@@ -1041,6 +1083,16 @@
         tabTasks: '📅 Appointments & Tasks',
         tabReports: '📈 Reports & Commissions',
         tabAds: '📣 Ads & Message Generator',
+        pillNames: {
+          dashboard: 'Dashboard',
+          sale: 'For Sale',
+          rent: 'For Rent',
+          req: 'Requests',
+          match: 'Smart Match',
+          tasks: 'Appointments',
+          reports: 'Reports & Comm.',
+          ads: 'Ads & Messages'
+        },
         kpiSaleTitle: 'Available for Sale',
         kpiRentTitle: 'Available for Rent',
         kpiReqTitle: 'Client Requests',
@@ -1049,8 +1101,8 @@
         currency: 'EGP',
         activeReq: (n) => `Active: ${n} requests`,
         closedDealsSub: (n) => `Closed: ${n} deals`,
-        dashReadyTitle: 'System Ready & Completely Empty (0 Records)',
-        dashReadyDesc: 'No sample data is preloaded. Start immediately by adding properties, client requests, or appointments manually, importing an Excel file, or installing the app icon on your phone or desktop.',
+        dashReadyTitle: 'Workspace Ready for Properties & Clients',
+        dashReadyDesc: 'Start adding sale/rent listings and client requests directly or import an Excel sheet. Commissions, smart matching, and ad messages update automatically.',
         dashTotalLabel: 'Total Saved Records',
         btnQuickAddSale: '+ Add Property for Sale',
         btnQuickAddRent: '+ Add Property for Rent',
@@ -1083,8 +1135,8 @@
         stClosed: 'Closed Deal',
         stCancelled: 'Cancelled',
         btnAddRecord: '+ Add New Record',
-        emptyTitle: 'System Ready & Completely Empty (0 Records)',
-        emptyDesc: 'No sample data is preloaded. Start immediately by adding properties, client requests, or appointments manually, importing an Excel file, or installing the app icon on your phone or desktop.',
+        emptyTitle: 'No records in this section yet',
+        emptyDesc: 'Add new records manually or import an Excel sheet.',
         btnImportSheet: '📥 Import Excel / CSV Sheet',
         thLoc: 'City / Area',
         thUnit: 'Unit & Area',
@@ -1210,17 +1262,18 @@
       'محل / مكتب إداري': { ar: 'محل / مكتب إداري', en: 'Shop / Office' }
     };
 
-    let db = {
-      lang: 'ar',
-      whatsapp: '01023088574',
-      sale: [],
-      rent: [],
-      req: [],
-      tasks: []
-    };
-
     function t(key) {
       return (i18n[db.lang] && i18n[db.lang][key]) || i18n.ar[key] || key;
+    }
+
+    function updateNavigationLabels() {
+      const pills = (i18n[db.lang] && i18n[db.lang].pillNames) || i18n.ar.pillNames;
+      const activeName = pills[currentTab] || pills.sale;
+      const pillEl = document.getElementById('currentSectionPill');
+      if (pillEl) pillEl.textContent = activeName;
+
+      const drawerLabelEl = document.getElementById('drawerActiveLabel');
+      if (drawerLabelEl) drawerLabelEl.textContent = activeName;
     }
 
     function applyLanguage() {
@@ -1242,6 +1295,8 @@
         const val = t(key);
         if (typeof val === 'string') el.textContent = val;
       });
+
+      updateNavigationLabels();
 
       document.querySelectorAll('.kpi-text').forEach(el => {
         el.classList.toggle('text-right', isEn);
@@ -1273,7 +1328,7 @@
 
     function loadDB() {
       try {
-        const saved = localStorage.getItem(STORAGE_KEY) || localStorage.getItem('crm_system_v4_data');
+        const saved = localStorage.getItem(STORAGE_KEY);
         if (saved) {
           const parsed = JSON.parse(saved);
           db = { ...db, ...parsed };
@@ -1301,21 +1356,19 @@
 
     function quickAdd(targetTab) {
       currentTab = targetTab;
-      switchTab(targetTab);
+      switchTab(targetTab, false);
       openAddModal();
     }
 
-    function switchTab(tab) {
+    function switchTab(tab, shouldScroll = false) {
       currentTab = tab;
       ['dashboard', 'sale', 'rent', 'req', 'match', 'tasks', 'reports', 'ads'].forEach(tb => {
         const btn = document.getElementById('tab-' + tb);
         if (!btn) return;
-        if (tb === tab) {
-          btn.className = 'tab-pill-active shrink-0 px-4 py-2.5 rounded-2xl text-xs font-extrabold transition flex items-center gap-2 cursor-pointer';
-        } else {
-          btn.className = 'tab-pill-inactive shrink-0 px-4 py-2.5 rounded-2xl text-xs font-extrabold transition flex items-center gap-2 cursor-pointer';
-        }
+        btn.className = tb === tab ? 'drawer-item-active w-full px-3.5 py-3 rounded-2xl text-xs font-extrabold transition flex items-center justify-between cursor-pointer' : 'drawer-item-inactive w-full px-3.5 py-3 rounded-2xl text-xs font-extrabold transition flex items-center justify-between cursor-pointer';
       });
+
+      updateNavigationLabels();
 
       document.getElementById('view-dashboard').classList.toggle('hidden', tab !== 'dashboard');
       document.getElementById('view-records').classList.toggle('hidden', !['sale', 'rent', 'req'].includes(tab));
@@ -1343,6 +1396,15 @@
         renderCharts();
       } else if (tab === 'ads') {
         populateAdItems();
+      }
+
+      if (shouldScroll) {
+        const anchor = document.getElementById('activeSectionAnchor');
+        if (anchor) {
+          setTimeout(() => {
+            anchor.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }, 80);
+        }
       }
     }
 
@@ -1381,23 +1443,23 @@
       const dateLabel = currentTab === 'req' ? t('thDateReq') : t('thDateOffer');
 
       headRow.innerHTML = `
-        <th class="p-3">#</th>
-        <th class="p-3">${t('thLoc')}</th>
-        <th class="p-3">${t('thUnit')}</th>
-        <th class="p-3">${priceLabel}</th>
-        <th class="p-3">${t('thPay')}</th>
-        <th class="p-3">${dateLabel}</th>
-        <th class="p-3">${t('thPhone')}</th>
-        <th class="p-3">${t('thBroker')}</th>
-        <th class="p-3">${t('thSales')}</th>
-        <th class="p-3">${t('thStatus')}</th>
-        <th class="p-3 text-center">${t('thActions')}</th>
+        <th class="p-3 whitespace-nowrap">#</th>
+        <th class="p-3 whitespace-nowrap">${t('thLoc')}</th>
+        <th class="p-3 whitespace-nowrap">${t('thUnit')}</th>
+        <th class="p-3 whitespace-nowrap">${priceLabel}</th>
+        <th class="p-3 whitespace-nowrap">${t('thPay')}</th>
+        <th class="p-3 whitespace-nowrap">${dateLabel}</th>
+        <th class="p-3 whitespace-nowrap">${t('thPhone')}</th>
+        <th class="p-3 whitespace-nowrap">${t('thBroker')}</th>
+        <th class="p-3 whitespace-nowrap">${t('thSales')}</th>
+        <th class="p-3 whitespace-nowrap">${t('thStatus')}</th>
+        <th class="p-3 whitespace-nowrap text-center">${t('thActions')}</th>
       `;
 
       bodyEl.innerHTML = filtered.map((item, idx) => {
         const waNum = formatWaNumber(item.phone);
         const phoneHtml = item.phone
-          ? `<div class="flex items-center gap-1.5" dir="ltr">
+          ? `<div class="flex items-center gap-1.5 whitespace-nowrap" dir="ltr">
                <span class="font-bold text-[#1A2421]">${item.phone}</span>
                <a href="https://wa.me/${waNum}" target="_blank" class="bg-[#E6F4EF] text-[#0D4735] border border-[#1E7E5E]/30 px-1.5 py-0.5 rounded font-bold hover:bg-[#C5E6DA]" title="WhatsApp">WA</a>
              </div>`
@@ -1416,28 +1478,28 @@
 
         return `
           <tr class="hover:bg-[#F6F6F4] transition">
-            <td class="p-3 font-bold text-[#5C6B66]">${idx + 1}</td>
-            <td class="p-3 font-bold text-[#1A2421]">${item.location || '—'}</td>
-            <td class="p-3">
+            <td class="p-3 font-bold text-[#5C6B66] whitespace-nowrap">${idx + 1}</td>
+            <td class="p-3 font-bold text-[#1A2421] whitespace-nowrap">${item.location || '—'}</td>
+            <td class="p-3 whitespace-nowrap">
               <div class="font-bold text-[#1A2421]">${unitText} (${item.area || '—'} m²)</div>
               <div class="text-[11px] text-[#5C6B66]">${item.rooms || ''}</div>
             </td>
-            <td class="p-3">
+            <td class="p-3 whitespace-nowrap">
               <div class="font-extrabold text-[#0D4735]">${Number(item.price || 0).toLocaleString()}</div>
               ${commBadge}
             </td>
-            <td class="p-3">
+            <td class="p-3 whitespace-nowrap">
               <div class="text-[#1A2421]">${item.payment || '—'}</div>
               <div class="text-[11px] text-[#5C6B66]">${item.finishing || ''}</div>
             </td>
-            <td class="p-3 text-[#5C6B66] font-semibold">${item.date || '—'}</td>
-            <td class="p-3">${phoneHtml}</td>
-            <td class="p-3 font-semibold text-[#1A2421]">${item.broker || '—'}</td>
-            <td class="p-3 font-semibold text-[#0D4735]">${item.sales || '—'}</td>
-            <td class="p-3">
-              <span class="px-2.5 py-1 rounded-full text-[11px] font-bold ${stObj.cls}">${stText}</span>
+            <td class="p-3 text-[#5C6B66] font-semibold whitespace-nowrap">${item.date || '—'}</td>
+            <td class="p-3 whitespace-nowrap">${phoneHtml}</td>
+            <td class="p-3 font-semibold text-[#1A2421] whitespace-nowrap">${item.broker || '—'}</td>
+            <td class="p-3 font-semibold text-[#0D4735] whitespace-nowrap">${item.sales || '—'}</td>
+            <td class="p-3 whitespace-nowrap">
+              <span class="inline-block whitespace-nowrap leading-snug px-3 py-1.5 rounded-full text-[11px] font-bold ${stObj.cls}">${stText}</span>
             </td>
-            <td class="p-3">
+            <td class="p-3 whitespace-nowrap">
               <div class="flex items-center justify-center gap-1">
                 <button type="button" onclick="openBrochureModal('${currentTab}', '${item.id}')" class="bg-[#FBF5EB] text-[#8F672B] border border-[#D4AC6E]/40 px-2 py-1 rounded-lg font-bold hover:bg-[#F4E6CC] cursor-pointer" title="Brochure / PDF">📄</button>
                 <button type="button" onclick="scheduleFromRecord('${currentTab}', '${item.id}')" class="bg-[#E6F4EF] text-[#0D4735] border border-[#1E7E5E]/30 px-2 py-1 rounded-lg font-bold hover:bg-[#C5E6DA] cursor-pointer" title="Schedule">📅</button>
@@ -1546,7 +1608,7 @@
         const a = document.createElement('a');
         a.style.display = 'none';
         a.href = url;
-        a.download = 'CRM_System_v4_3.html';
+        a.download = 'CRM_System_v5_Full.html';
         document.body.appendChild(a);
         a.click();
         setTimeout(() => {
